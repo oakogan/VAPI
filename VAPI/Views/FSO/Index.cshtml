@@ -1,0 +1,118 @@
+﻿@using Sitecore.Data.Items
+@using VAPI.Models
+@model FsoModel
+
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>
+
+<div class="container">
+    <h2>FSO/Vertical </h2>
+    <ul class="nav nav-tabs">
+        @foreach (Sitecore.Data.Items.Item tab in Model.Tabs)
+        {
+            string hrefString1 = "#menu" + Model.Tabs.IndexOf(tab).ToString();
+            <li><a href="@hrefString1">@tab.Name</a></li>
+        }
+    </ul>
+
+    <div class="tab-content">
+        @foreach (Sitecore.Data.Items.Item tab in Model.Tabs)
+        {
+            string hrefString2 = "#menu" + Model.Tabs.IndexOf(tab).ToString();
+            <div>=== @hrefString2</div>
+
+            <div id="@hrefString2" class="tab-pane fade">
+                @*<h3>Exterior</h3>*@
+
+
+                <table>
+                    @*<tr>
+                            <th>Exterior</th>
+                            <th>Contact</th>
+                            <th>Country</th>
+                        </tr>*@
+                    <tr>
+                        <td>Katashiki</td>
+                        @foreach (Sitecore.Data.Items.Item trim in Model.Trims)
+                    {
+                    <td>@Html.Sitecore().Field("Katashiki", trim)</td>
+                    }
+                    </tr>
+                    <tr>
+                        <td>Katashiki Code</td>
+                        @foreach (Sitecore.Data.Items.Item trim in Model.Trims)
+                    {
+                    <td>@Html.Sitecore().Field("Katashiki Code", trim)</td>
+                    }
+                    </tr>
+                    <tr>
+                        <td>Description</td>
+
+                        @foreach (Sitecore.Data.Items.Item trim in Model.Trims)
+                    {
+                    <td>@Html.Sitecore().Field("Description", trim)</td>
+                    }
+                    </tr>
+
+
+                    <tr style="background-color:burlywood">
+
+                        <td>Exterior</td>
+
+                    </tr>
+                    @*<tr>
+                            <td>8.1' Long Bed</td>
+                            <td>S</td>
+                            <td>S</td>
+                            <td>S</td>
+                            <td>O</td>
+                            <td>S</td>
+                            <td>S</td>
+                            <td>S</td>
+                            <td>O</td>
+                            <td>S</td>
+                            <td>S</td>
+                        </tr>
+                        <tr>
+                            <td>Larger fuel tank (38-gallon)</td>
+                            <td>P</td>
+                            <td>S</td>
+                            <td>O</td>
+                            <td>O</td>
+                            <td>S</td>
+                            <td>O</td>
+                            <td>S</td>
+                            <td>S</td>
+                            <td>S</td>
+                            <td>S</td>
+                        </tr>*@
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+
+        $(".nav-tabs a").click(function () {
+            $(this).tab('show');
+        });
+    });
+</script>
