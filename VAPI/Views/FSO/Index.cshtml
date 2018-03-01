@@ -41,13 +41,6 @@
                 int colSpan = Model.Trims.Count + 1;
 
             <div id="@hrefString2" class="tab-pane fade @active">
-                @*<h3>Exterior</h3>*@
-
-
-
-
-
-
                 <table>
                     <tr>
                         <td>Katashiki</td>
@@ -72,28 +65,39 @@
                         }
                     </tr>
 
-                   
-                        @*//List<Item> subSections = Model.Trims.First().Axes.GetDescendants().Where(x => x.TemplateID.ToString() == "{A07350B4-FF45-4F4D-BDA0-B2160880C510}").ToList();*@
-
-                        @foreach (Item subSection in tab.GetChildren())
+                    @foreach (Item subSection in tab.GetChildren())
+                    {
+                        <tr style="background-color:burlywood; font-weight:bold;">
+                            <td colspan="@colSpan">@subSection.Name</td>
+                        </tr>
+                        foreach (Item spec in subSection.GetChildren())
                         {
-                            <tr style="background-color:burlywood; font-weight:bold;">
-                                <td colspan="@colSpan">@subSection.Name</td>
+                            <tr>
+                                <td>@spec["Name Multiline"]</td>
+
+                                @foreach (Item trim in Model.Trims)
+                                {
+                                    Item currentSpec = trim.Axes.GetDescendants().FirstOrDefault(x => x["Name Multiline"] == spec["Name Multiline"]);
+
+                                    <td>
+                                        @currentSpec["Spec"]
+                                    </td>
+                                }
                             </tr>
-                            
                         }
+                    }
 
-                    
 
-                  
+
+
                     @*<tr>
-                <td>8.1' Long Bed</td>
+                            <td>8.1' Long Bed</td>
 
-            </tr>
-            <tr>
-                <td>Larger fuel tank (38-gallon)</td>
+                        </tr>
+                        <tr>
+                            <td>Larger fuel tank (38-gallon)</td>
 
-            </tr>*@
+                        </tr>*@
                 </table>
             </div>
         }

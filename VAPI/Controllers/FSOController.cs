@@ -58,6 +58,7 @@ namespace VAPI.Controllers
             foreach(Item subsection in test)
             {
                 string name = subsection.Name;
+                Item spec = trims.First().Axes.GetDescendants().FirstOrDefault(x => x["Name Multiline"] == "");
             }
 
             return View("Index", fsoModel);
