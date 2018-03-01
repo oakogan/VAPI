@@ -37,7 +37,7 @@ namespace VAPI.Controllers
 
 
 
-            
+
 
             //var controllerContext = this.ControllerContext;
             //var result = ViewEngines.Engines.FindView(controllerContext, "Test", null);
@@ -53,6 +53,12 @@ namespace VAPI.Controllers
             //                 KatashikiCode = trimItem["Katashiki Code"]                             
             //             };
 
+            List<Item> test = featuresFolders.First().GetChildren().ToList();
+           
+            foreach(Item subsection in test)
+            {
+                string name = subsection.Name;
+            }
 
             return View("Index", fsoModel);
         }

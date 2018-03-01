@@ -1,5 +1,7 @@
 ﻿@using Sitecore.Data.Items
 @using VAPI.Models
+@using System.Collections.Generic;
+@using System.Linq;
 @model FsoModel
 
 <style>
@@ -21,86 +23,77 @@
 </style>
 
 <div class="container">
-    <h2>FSO/Vertical </h2>
+    <h2>FSO/Vertical blah</h2>
     <ul class="nav nav-tabs">
         @foreach (Sitecore.Data.Items.Item tab in Model.Tabs)
         {
+            string active = (Model.Tabs.IndexOf(tab) == 0) ? "active" : "";
             string hrefString1 = "#menu" + Model.Tabs.IndexOf(tab).ToString();
-            <li><a href="@hrefString1">@tab.Name</a></li>
+            <li class="@active"><a href="@hrefString1">@tab.Name</a></li>
         }
     </ul>
 
     <div class="tab-content">
-        @foreach (Sitecore.Data.Items.Item tab in Model.Tabs)
-        {
-            string hrefString2 = "#menu" + Model.Tabs.IndexOf(tab).ToString();
-            <div>=== @hrefString2</div>
+        @foreach (Item tab in Model.Tabs)
+            {
+                string active = (Model.Tabs.IndexOf(tab) == 0) ? "active in" : "";
+                string hrefString2 = "menu" + Model.Tabs.IndexOf(tab).ToString();
+                int colSpan = Model.Trims.Count + 1;
 
-            <div id="@hrefString2" class="tab-pane fade">
+            <div id="@hrefString2" class="tab-pane fade @active">
                 @*<h3>Exterior</h3>*@
 
 
+
+
+
+
                 <table>
-                    @*<tr>
-                            <th>Exterior</th>
-                            <th>Contact</th>
-                            <th>Country</th>
-                        </tr>*@
                     <tr>
                         <td>Katashiki</td>
                         @foreach (Sitecore.Data.Items.Item trim in Model.Trims)
-                    {
-                    <td>@Html.Sitecore().Field("Katashiki", trim)</td>
-                    }
+                        {
+                            <td>@Html.Sitecore().Field("Katashiki", trim)</td>
+                        }
                     </tr>
                     <tr>
                         <td>Katashiki Code</td>
                         @foreach (Sitecore.Data.Items.Item trim in Model.Trims)
-                    {
-                    <td>@Html.Sitecore().Field("Katashiki Code", trim)</td>
-                    }
+                        {
+                            <td>@Html.Sitecore().Field("Katashiki Code", trim)</td>
+                        }
                     </tr>
                     <tr>
                         <td>Description</td>
 
                         @foreach (Sitecore.Data.Items.Item trim in Model.Trims)
-                    {
-                    <td>@Html.Sitecore().Field("Description", trim)</td>
-                    }
+                        {
+                            <td>@Html.Sitecore().Field("Description", trim)</td>
+                        }
                     </tr>
 
+                   
+                        @*//List<Item> subSections = Model.Trims.First().Axes.GetDescendants().Where(x => x.TemplateID.ToString() == "{A07350B4-FF45-4F4D-BDA0-B2160880C510}").ToList();*@
 
-                    <tr style="background-color:burlywood">
+                        @foreach (Item subSection in tab.GetChildren())
+                        {
+                            <tr style="background-color:burlywood; font-weight:bold;">
+                                <td colspan="@colSpan">@subSection.Name</td>
+                            </tr>
+                            
+                        }
 
-                        <td>Exterior</td>
+                    
 
-                    </tr>
+                  
                     @*<tr>
-                            <td>8.1' Long Bed</td>
-                            <td>S</td>
-                            <td>S</td>
-                            <td>S</td>
-                            <td>O</td>
-                            <td>S</td>
-                            <td>S</td>
-                            <td>S</td>
-                            <td>O</td>
-                            <td>S</td>
-                            <td>S</td>
-                        </tr>
-                        <tr>
-                            <td>Larger fuel tank (38-gallon)</td>
-                            <td>P</td>
-                            <td>S</td>
-                            <td>O</td>
-                            <td>O</td>
-                            <td>S</td>
-                            <td>O</td>
-                            <td>S</td>
-                            <td>S</td>
-                            <td>S</td>
-                            <td>S</td>
-                        </tr>*@
+                <td>8.1' Long Bed</td>
+
+            </tr>
+            <tr>
+                <td>Larger fuel tank (38-gallon)</td>
+
+            </tr>*@
                 </table>
             </div>
         }
@@ -109,8 +102,6 @@
 
 <script>
     $(document).ready(function () {
-
-
         $(".nav-tabs a").click(function () {
             $(this).tab('show');
         });
