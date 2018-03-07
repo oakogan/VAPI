@@ -15,10 +15,9 @@ namespace VAPI.Handlers
             // Extract the item from the event Arguments
             Item savedItem = Event.ExtractParameter(args, 0) as Item;
 
-            if (savedItem.TemplateID.ToString() == "{3DEE5BD4-8ED9-494D-9420-8519C696F78D}"
-                || savedItem.TemplateID.ToString() == "{9B79BDE9-EDD6-4214-BBAA-B694C9A81C25}" || savedItem.TemplateID.ToString() == "{8CC4E1AB-2835-4225-929F-29547CE9DF64}") // It's a spec
+            if (savedItem.TemplateID.ToString() == "{DD9FBE61-8565-44C8-8283-EC7FF04342E1}" ) // It's a Trim or an FSO
             {
-                Item trim = savedItem.Axes.GetAncestors().FirstOrDefault(x => x.TemplateID.ToString() == "{DD9FBE61-8565-44C8-8283-EC7FF04342E1}");
+                Item trim = savedItem;
 
                 if (trim == null)
                     return;
@@ -31,8 +30,8 @@ namespace VAPI.Handlers
                 StringBuilder sbText = new StringBuilder();
                 StringBuilder sbGuid = new StringBuilder();
 
-                sbText.Append(trim.Name).AppendLine().AppendLine();
-                sbGuid.Append(trim.Name).AppendLine().AppendLine();
+                //sbText.Append(trim.Name).AppendLine().AppendLine();
+                //sbGuid.Append(trim.Name).AppendLine().AppendLine();
 
                 using (new SecurityDisabler())
                 {
@@ -41,29 +40,29 @@ namespace VAPI.Handlers
                     // Do your edits here
                     foreach (Item featureFolder in featuresFolders)
                     {
-                        sbText.Append("===").Append(featureFolder.Name).Append("===").AppendLine();
-                        sbGuid.Append("===").Append(featureFolder.Name).Append("===").AppendLine();
+                        sbText.Append("<h1>").Append(featureFolder.Name).Append("</h1>").AppendLine();
+                        sbGuid.Append("<h1>").Append(featureFolder.Name).Append("</h1>").AppendLine();
 
                         foreach (Item tabSection in featureFolder.Children)
                         {
-                            sbText.Append(tabSection.Name).AppendLine();
-                            sbGuid.Append(tabSection.Name).AppendLine();
+                            sbText.Append("<h2>").Append(tabSection.Name).Append("</h2>").AppendLine().AppendLine();
+                            sbGuid.Append("<h2>").Append(tabSection.Name).Append("</h2>").AppendLine().AppendLine();
 
                             foreach (Item spec in tabSection.Children)
                             {
-                                sbText.Append(spec["Name Multiline"]).Append(" : ").Append(spec["Spec"]).AppendLine();
-                                sbGuid.Append(spec.ID).Append(" : ").Append(spec["Spec"]).AppendLine();
+                                sbText.Append("<div>").Append(spec["Name Multiline"]).Append(" : ").Append(spec["Spec"]).Append("</div>").AppendLine().AppendLine();
+                                sbGuid.Append("<div>").Append(spec.ID).Append(" : ").Append(spec["Spec"]).Append("/<div>").AppendLine().AppendLine();
                             }
                         }
 
                     }
 
-                    trim["SOP Matrix Text"] = sbText.ToString();
-                    trim["SOP Matrix Guid"] = sbGuid.ToString();
+                    //trim["SOP Matrix Text"] = sbText.ToString();
+                    //trim["SOP Matrix Guid"] = sbGuid.ToString();
                     trim.Editing.EndEdit();
                 }
-
             }
+            //|| savedItem.TemplateID.ToString() == "{97D1B974-7B34-456D-8D59-B21411F160D2}"
         }
     }
 }

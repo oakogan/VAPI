@@ -204,11 +204,13 @@
     <Content Include="Views\FSO.cshtml" />
     <Content Include="Views\Layouts\VAPILayout.cshtml" />
     <Content Include="Views\FSO\Index.cshtml" />
+    <Content Include="Views\FSO\CommonFSO.cshtml" />
     <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RazorGeneratorMvcStart.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Controllers\FSOController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

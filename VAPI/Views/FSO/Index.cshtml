@@ -80,7 +80,7 @@
                                     Item currentSpec = trim.Axes.GetDescendants().FirstOrDefault(x => x["Name Multiline"] == spec["Name Multiline"]);
 
                                     <td>
-                                        @currentSpec["Spec"]
+                                        @Html.Sitecore().Field("Spec", currentSpec)
                                     </td>
                                 }
                             </tr>
