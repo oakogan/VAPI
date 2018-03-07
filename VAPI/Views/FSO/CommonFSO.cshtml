@@ -82,13 +82,14 @@
                                     if (string.IsNullOrEmpty(matrixText)) //new trim. Look up values from the Common Data for the year
                                     {
                                         Item currentSpec = Model.Tabs.First().Parent.Axes.GetDescendants().FirstOrDefault(x => x["Name Multiline"] == spec["Name Multiline"]);
-                                        
+
                                         <td>
                                             @Html.Sitecore().Field("Spec", currentSpec)
-                                        </td>
-                                        @*@if (FieldTypeManager.GetField(currentSpec.Fields["Spec"]) is ValueLookupField)
-                                        {
-                                            Item sourceItem = currentSpec.Fields["Spec"].Source;
+
+
+                                            @if (FieldTypeManager.GetField(currentSpec.Fields["Spec"]) is ValueLookupField)
+                                            {
+                                            Item sourceItem = Sitecore.Context.Database.GetItem(currentSpec.Fields["Spec"].Source);
 
 
 
@@ -98,11 +99,12 @@
                                                     <option>Option 1</option>
                                                     <option>Option 2</option>
                                                 </select>
-                                        }
-                                        else if (FieldTypeManager.GetField(currentSpec.Fields["Spec"]) is TextField)
-                                        {
+                                            }
+                                            else if (FieldTypeManager.GetField(currentSpec.Fields["Spec"]) is TextField)
+                                            {
                                             <input type="text" value="@currentSpec["Spec"]" />
-                                        }*@
+                                            }
+                                        </td>
                                     }
 
                                     @*<td>*@
