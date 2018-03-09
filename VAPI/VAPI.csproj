@@ -205,7 +205,7 @@
     <Content Include="Views\Layouts\VAPILayout.cshtml" />
     <Content Include="Views\FSO\Index.cshtml" />
     <Content Include="Views\FSO\CommonFSO.cshtml" />
-    <Content Include="Views\FSO\FSO.cshtml" />
+    <Content Include="Views\FSO\FSONew.cshtml" />
     <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

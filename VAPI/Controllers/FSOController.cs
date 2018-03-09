@@ -157,7 +157,7 @@ namespace VAPI.Controllers
                 fullTrim.SitecoreTrim = trim;
                 fullTrim.FullTabs = new List<FullTab>();
 
-                foreach (Item tab in model.Tabs)
+                foreach (Item tab in model.Tabs) 
                 {
                     FullTab fullTab = new FullTab();
                     fullTab.Name = tab.Name;
@@ -204,7 +204,7 @@ namespace VAPI.Controllers
                 //string y = trim.FullTabs.FirstOrDefault(x => x.Name == model.Tabs.First().Name).FullSectionTabs.FirstOrDefault(x => x.Name == trim.FullTabs.First().Name).FullSpecs.FirstOrDefault(x => x.Name == spec.Name).Name;
             }
 
-            return View("~/Views/FSO/FSO.cshtml", model);
+            return View("~/Views/FSO/FSONew.cshtml", model);
         }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace VAPI.Controllers
         [HttpPost]
         public ActionResult FsoSave(CommonModel model)
         {
-            return View("~/Views/FSO/FSO.cshtml", model);
+            return View("~/Views/FSO/FSONew.cshtml", model);
         }
     }
 

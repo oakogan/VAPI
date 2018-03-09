@@ -20,6 +20,12 @@
     }
 </style>
 
+@if(Model == null || Model.FullTrims == null || Model.Tabs == null)
+{
+    <div> Empty Model</div>
+    return;
+}
+
 @using (Html.BeginForm("FSOSave", "FSO", FormMethod.Post, new { id = "form", name = "form", ng_show = "selectedMonth != null" }))
 {
     <div class="container">
