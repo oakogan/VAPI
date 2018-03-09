@@ -205,6 +205,7 @@
     <Content Include="Views\Layouts\VAPILayout.cshtml" />
     <Content Include="Views\FSO\Index.cshtml" />
     <Content Include="Views\FSO\CommonFSO.cshtml" />
+    <Content Include="Views\FSO\FSO.cshtml" />
     <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -215,7 +216,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Handlers\OnItemCreated.cs" />
     <Compile Include="Handlers\OnItemSaved.cs" />
+    <Compile Include="Models\CommonModel.cs" />
     <Compile Include="Models\FsoModel.cs" />
     <Compile Include="Models\Trim.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

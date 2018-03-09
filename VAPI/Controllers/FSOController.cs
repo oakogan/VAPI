@@ -13,7 +13,7 @@ namespace VAPI.Controllers
     public class FSOController : Controller
     {
         // GET: FSO
-        public ActionResult Index() 
+        public ActionResult Index()
         {
             Item parent = Sitecore.Context.Item.Parent;
             List<Item> yearChildren = parent.GetChildren().ToList();
@@ -55,8 +55,8 @@ namespace VAPI.Controllers
             //             };
 
             List<Item> test = featuresFolders.First().GetChildren().ToList();
-           
-            foreach(Item subsection in test)
+
+            foreach (Item subsection in test)
             {
                 //if (FieldTypeManager.GetField(Sitecore.Context.Item.Fields["Spec"]) is Sitecore.Data.Fields.ValueLookupField)
                 //{
@@ -94,7 +94,7 @@ namespace VAPI.Controllers
             FsoModel fsoModel = new FsoModel { Trims = trims, Tabs = featuresFolders };
 
 
-
+            //CommonModel model = new CommonModel { Tabs = featuresFolders, FullTrims = new List<FullTrim>() };
 
 
             //var controllerContext = this.ControllerContext;
@@ -117,15 +117,105 @@ namespace VAPI.Controllers
             {
                 string name = subsection.Name;
                 Item spec = trims.First().Axes.GetDescendants().FirstOrDefault(x => x["Name Multiline"] == "");
-                
+
             }
 
             var controllerContext = this.ControllerContext;
             var result = ViewEngines.Engines.FindView(controllerContext, "CommonFSO", null);
 
-            return View("~/Views/FSO/CommonFSO.cshtml", fsoModel);
+            return View("~/Views/FSO/FSO.cshtml", fsoModel);
+        }
+
+        public ActionResult LoadFSO()
+        {
+            Item parent = Sitecore.Context.Item.Parent;
+            List<Item> yearChildren = parent.GetChildren().ToList();
+            List<Item> trims = null;
+            List<Item> featuresFolders = null;
+
+            Item commonDataFolder = yearChildren.FirstOrDefault(x => x.TemplateID.ToString() == "{579820E7-297B-4EFC-AAA2-9AC7FA39B1CD}");
+            if (commonDataFolder != null)
+            {
+                featuresFolders = commonDataFolder.GetChildren().ToList();
+            }
+
+            Item trimsFolder = yearChildren.FirstOrDefault(x => x.TemplateID.ToString() == "{9EB3892F-F93A-4D30-93A3-0BEA57C7347B}");
+            if (trimsFolder != null)
+            {
+                trims = trimsFolder.GetChildren().ToList();
+
+            }
+
+            CommonModel model = new CommonModel();
+            model.Tabs = featuresFolders;
+            model.FullTrims = new List<FullTrim>();
+
+            //Build full trims
+            foreach (Item trim in trims)
+            {
+                FullTrim fullTrim = new FullTrim();
+                fullTrim.SitecoreTrim = trim;
+                fullTrim.FullTabs = new List<FullTab>();
+
+                foreach (Item tab in model.Tabs)
+                {
+                    FullTab fullTab = new FullTab();
+                    fullTab.Name = tab.Name;
+                    fullTab.FullSectionTabs = new List<FullSectionTab>();
+
+                    foreach (Item sectionTab in tab.GetChildren().Where(x => x.TemplateID.ToString() == "{A07350B4-FF45-4F4D-BDA0-B2160880C510}"))
+                    {
+                        FullSectionTab fullSectionTab = new FullSectionTab();
+                        fullSectionTab.Name = sectionTab.Name;
+                        fullSectionTab.FullSpecs = new List<FullSpec>();
+
+                        foreach (Item spec in sectionTab.GetChildren())
+                        {
+                            FullSpec fullSpec = new FullSpec();
+                            fullSpec.Name = spec.Name;
+                            fullSpec.Value = spec["Spec"];
+                            fullSpec.DropDownOptions = null;
+
+                            if (FieldTypeManager.GetField(spec.Fields["Spec"]) is ValueLookupField)
+                            {
+                                Item sourceItem = Sitecore.Context.Database.GetItem(spec.Fields["Spec"].Source);
+                                fullSpec.DropDownOptions = new List<string>();
+
+                                var options = from Item option in sourceItem.GetChildren()
+                                              select option.Name;
+
+                                fullSpec.DropDownOptions = options.ToList();
+                            }
+                            fullSectionTab.FullSpecs.Add(fullSpec);
+
+                        }
+                        fullTab.FullSectionTabs.Add(fullSectionTab);
+                    }
+                    fullTrim.FullTabs.Add(fullTab);
+                }
+
+                model.FullTrims.Add(fullTrim);
+
+            }
+
+            foreach (FullTrim trim in model.FullTrims)
+            {
+                FullSpec spec = new FullSpec();
+                //string y = trim.FullTabs.FirstOrDefault(x => x.Name == model.Tabs.First().Name).FullSectionTabs.FirstOrDefault(x => x.Name == trim.FullTabs.First().Name).FullSpecs.FirstOrDefault(x => x.Name == spec.Name).Name;
+            }
+
+            return View("~/Views/FSO/FSO.cshtml", model);
+        }
+
+        /// <summary>
+        /// Action method to handle user input
+        /// </summary>      
+        [HttpPost]
+        public ActionResult FsoSave(CommonModel model)
+        {
+            return View("~/Views/FSO/FSO.cshtml", model);
         }
     }
 
-   
+
 }

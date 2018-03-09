@@ -8,63 +8,58 @@ using System.Text;
 
 namespace VAPI.Handlers
 {
-    public class OnItemSaved
+    public class OnItemCreated
     {
-        public void VAPIOnItemSaved(object sender, EventArgs args)
+        public void VAPIOnItemCreated(object sender, EventArgs args)
         {
             // Extract the item from the event Arguments
-            Item savedItem = Event.ExtractParameter(args, 0) as Item;
+            Item createdItem = Event.ExtractParameter(args, 0) as Item;
 
-          
-
-            if (savedItem.TemplateID.ToString() == "{DD9FBE61-8565-44C8-8283-EC7FF04342E1}" ) // It's a Trim or an FSO
+            if (createdItem.TemplateID.ToString() == "{DD9FBE61-8565-44C8-8283-EC7FF04342E1}") // It's a Trim or an FSO
             {
-                Item trim = savedItem;
+                Item commonDataItem = createdItem.Parent.Parent.GetChildren().FirstOrDefault(x => x.TemplateID.ToString() == "{579820E7-297B-4EFC-AAA2-9AC7FA39B1CD}");
 
-                if (trim == null)
+                if (commonDataItem == null)
                     return;
-
-                //Custom save 
-                List<Item> featuresFolders = trim.GetChildren().ToList();
-                if (featuresFolders == null || !featuresFolders.Any())
-                    return; 
-
+                 
                 StringBuilder sbText = new StringBuilder();
                 StringBuilder sbGuid = new StringBuilder();
 
-                //sbText.Append(trim.Name).AppendLine().AppendLine();
-                //sbGuid.Append(trim.Name).AppendLine().AppendLine();
-
+                //Custom save 
+                List<Item> featuresFolders = commonDataItem.GetChildren().ToList();
+                if (featuresFolders == null || !featuresFolders.Any())
+                    return;
+            
                 using (new SecurityDisabler())
                 {
-                    trim.Editing.BeginEdit();
+                    createdItem.Editing.BeginEdit();
 
                     // Do your edits here
                     foreach (Item featureFolder in featuresFolders)
                     {
                         sbText.Append("<h1>").Append(featureFolder.Name).Append("</h1>").AppendLine();
-                        sbGuid.Append("<h1>").Append(featureFolder.Name).Append("</h1>").AppendLine();
+                        //sbGuid.Append(featureFolder.Name).AppendLine();
 
                         foreach (Item tabSection in featureFolder.Children)
                         {
                             sbText.Append("<h2>").Append(tabSection.Name).Append("</h2>").AppendLine().AppendLine();
-                            sbGuid.Append("<h2>").Append(tabSection.Name).Append("</h2>").AppendLine().AppendLine();
+                            //sbGuid.Append(tabSection.Name).AppendLine().AppendLine();
 
                             foreach (Item spec in tabSection.Children)
                             {
                                 sbText.Append("<div>").Append(spec["Name Multiline"]).Append(" : ").Append(spec["Spec"]).Append("</div>").AppendLine().AppendLine();
-                                sbGuid.Append("<div>").Append(spec.ID).Append(" : ").Append(spec["Spec"]).Append("/<div>").AppendLine().AppendLine();
+                                sbGuid.Append(spec.ID).Append(" : ").Append(spec["Spec"]).Append("/");
                             }
                         }
 
                     }
 
-                    //trim["SOP Matrix Text"] = sbText.ToString();
-                    //trim["SOP Matrix Guid"] = sbGuid.ToString();
-                    trim.Editing.EndEdit();
+                    createdItem["SOP Matrix Text"] = sbText.ToString();
+                    createdItem["SOP Matrix Guid"] = sbGuid.ToString();
+                    createdItem.Editing.EndEdit();
                 }
             }
-            else 
+            else
             {
 
 
