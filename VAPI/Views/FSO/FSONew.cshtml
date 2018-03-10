@@ -84,43 +84,50 @@
 
                                     @foreach (VAPI.Models.FullTrim trim in Model.FullTrims)
                                     {
-                                        string sopMatrixGuidString = trim.SitecoreTrim["SOP Matrix Guid"];
-                                        string[] words = sopMatrixGuidString.Split('/');
-                                        List<string> matches = words.ToList();
+                                        List<string> matches = trim.SopMatrixGuid.Split('/').ToList();
+                                        string match = matches.FirstOrDefault(x => x.Contains(spec.ID.ToString()));
 
-                                        string match = words.FirstOrDefault(x => x.Contains(spec.ID.ToString()));
+                                        if (match != null)
+                                        {
+                                            string[] a = match.Split(':');
 
-                                        @*<td>@match</td>*@
+                                            <td>
+                                                @if (FieldTypeManager.GetField(spec.Fields["Spec"]) is ValueLookupField)
+                                                {
+                                                    Item sourceItem = Sitecore.Context.Database.GetItem(spec.Fields["Spec"].Source);
 
-                                    if (match != null)
-                                    {
-                                        string[] a = match.Split(':');
-                                        @*<td>@a[1]</td>*@
-                                        <td>
-                                            @if (FieldTypeManager.GetField(spec.Fields["Spec"]) is ValueLookupField)
-                                            {
-                                                Item sourceItem = Sitecore.Context.Database.GetItem(spec.Fields["Spec"].Source);
+                                                    ////List<string> options = sourceItem.GetChildren();
+                                                    //List<Dictionary<string, string>> options = new List<Dictionary<string, string>>();
 
+                                                    //foreach (Item item in sourceItem.GetChildren())
+                                                    //{
+                                                    //    options.ad
+                                                    //}
 
+                                                    //var options = from Item optionItem in sourceItem.GetChildren() select new List<Dictionary<string, string>> { Name };
+                                                    <div>
+                                                        @a[1]
+                                                    </div>
 
-                                                @*<p>@currentSpec.Fields["Spec"].Source</p>*@
-
-                                                <select>
-                                                    <option>Option 1</option>
-                                                    <option>Option 2</option>
-                                                </select>
-                                            }
-                                            else if (FieldTypeManager.GetField(spec.Fields["Spec"]) is TextField)
-                                            {
-                                                <input type="text" value="@spec["Spec"]" />
-                                            }
-                                        </td>
-                                    }
-                                    else
-                                    {
+                                                    <select>
+                                                        @foreach (Item option in sourceItem.GetChildren())
+                                                        {
+                                                            string selected = (a[1] == option.Name) ? "selected" : "";
+                                                            <option @selected>@option.Name</option>
+                                                        }
+                                                    </select>
+                                                }
+                                                else if (FieldTypeManager.GetField(spec.Fields["Spec"]) is TextField)
+                                                {
+                                                    <input type="text" value="@a[1]" />
+                                                }
+                                            </td>
+                                        }
+                                        else
+                                        {
                                         <td>NOT FOUND</td>
                                         }
-                                    } @*end of foreach*@
+                                    } 
                                 </tr>
                             }
                         }

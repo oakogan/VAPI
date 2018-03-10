@@ -15,7 +15,7 @@ namespace VAPI.Handlers
             // Extract the item from the event Arguments
             Item createdItem = Event.ExtractParameter(args, 0) as Item;
 
-            if (createdItem.TemplateID.ToString() == "{DD9FBE61-8565-44C8-8283-EC7FF04342E1}") // It's a Trim or an FSO
+            if (createdItem.TemplateID.ToString() == "{DD9FBE61-8565-44C8-8283-EC7FF04342E1}" && string.IsNullOrEmpty(createdItem["SOP Matrix Text"])) // It's a Trim or an FSO
             {
                 Item commonDataItem = createdItem.Parent.Parent.GetChildren().FirstOrDefault(x => x.TemplateID.ToString() == "{579820E7-297B-4EFC-AAA2-9AC7FA39B1CD}");
 

@@ -155,6 +155,7 @@ namespace VAPI.Controllers
             {
                 FullTrim fullTrim = new FullTrim();
                 fullTrim.SitecoreTrim = trim;
+                fullTrim.SopMatrixGuid = trim["SOP Matrix Guid"];
                 fullTrim.FullTabs = new List<FullTab>();
 
                 foreach (Item tab in model.Tabs) 

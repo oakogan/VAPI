@@ -13,6 +13,8 @@ namespace VAPI.Models
     {
         public List<FullTab> FullTabs { get; set; }
         public Item SitecoreTrim { get; set; }
+        public string SopMatrixGuid { get; set; }
+        public string SopMatrixText { get; set; }
     }
 
     public class FullTab
