@@ -9,7 +9,7 @@ namespace VAPI
     {
         //Field Names
         public static string SOPMatrixText_FieldName = "SOP Matrix Text";
-
+        public static string SOPMatrixGuid_FieldName = "SOP Matrix Guid";
         //Item ID's
 
     }

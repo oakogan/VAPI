@@ -20,7 +20,16 @@
     }
 </style>
 
-@if(Model == null || Model.FullTrims == null || Model.Tabs == null)
+<script type="text/javascript">
+    function UpdateSpecs(specIdString)
+    {
+        var currentValue = document.getElementById("UpdatedSpecs").value;
+        alert(specIdString);
+        document.getElementById("UpdatedSpecs").value = currentValue + "---" + specIdString;
+    }
+</script>
+
+@if (Model == null || Model.Trims == null || Model.Tabs == null)
 {
     <div> Empty Model</div>
     return;
@@ -28,114 +37,127 @@
 
 @using (Html.BeginForm("FSOSave", "FSO", FormMethod.Post, new { id = "form", name = "form", ng_show = "selectedMonth != null" }))
 {
-    <div class="container">
-        <h2>@Html.Sitecore().Field("SOP Matrix Guid", Sitecore.Context.Item)</h2> <input type="submit" name="submit" value="Save Your Inputs" /><br /><br />
-        <ul class="nav nav-tabs">
-            @foreach (Sitecore.Data.Items.Item tab in Model.Tabs)
-            {
-                string active = (Model.Tabs.IndexOf(tab) == 0) ? "active" : "";
-                string hrefString1 = "#menu" + Model.Tabs.IndexOf(tab).ToString();
-                <li class="@active"><a href="@hrefString1">@tab.Name</a></li>
-            }
-        </ul>
+    int trimCount = 0;
 
-        <div class="tab-content">
-            @foreach (Item tab in Model.Tabs)
-            {
-                string active = (Model.Tabs.IndexOf(tab) == 0) ? "active in" : "";
-                string hrefString2 = "menu" + Model.Tabs.IndexOf(tab).ToString();
-                int colSpan = Model.FullTrims.Count + 1;
+    <div>===</div>
+    @Html.Hidden("hiddenId", Model.ContextItemId)
+    @Html.HiddenFor(model => Model.ContextItemId)
+    @Html.HiddenFor(model => Model.UpdatedSpecs)
+    <input type="hidden" value="@Model.ContextItemId" runat="server" id="contextItemId" />
 
-                <div id="@hrefString2" class="tab-pane fade @active">
-                    <table>
-                        <tr>
-                            <td style="max-width:200px;">Katashiki</td>
-                            @foreach (VAPI.Models.FullTrim trim in Model.FullTrims)
-                            {
-                                <td>@Html.Sitecore().Field("Katashiki", trim.SitecoreTrim)</td>
+    foreach (Item trim in Model.Trims)
+    {
+        @*@Html.HiddenFor(model => Model.MatrixGuidString[i])*@
+    string valueString = trimCount + "trim" + trim.ID.ToString() + "--" + trim[Constants.SOPMatrixGuid_FieldName];
+    string idString = "trimHidden" + trimCount;
+    //<input type="hidden" id="@idString" value="@valueString" />
+    trimCount++;
+}
 
-                            }
-                        </tr>
-                        <tr>
-                            <td style="max-width:200px;">Katashiki Code</td>
-                            @foreach (VAPI.Models.FullTrim trim in Model.FullTrims)
-                            {
-                                <td>@Html.Sitecore().Field("Katashiki Code", trim.SitecoreTrim)</td>
-                            }
-                        </tr>
-                        <tr>
-                            <td style="max-width:200px;">Description</td>
 
-                            @foreach (VAPI.Models.FullTrim trim in Model.FullTrims)
-                            {
-                                <td>@Html.Sitecore().Field("Description", trim.SitecoreTrim)</td>
-                            }
-                        </tr>
+        <div class="container">
+            <h2>@Html.Sitecore().Field("SOP Matrix Guid", Sitecore.Context.Item)</h2> <input type="submit" name="submit" value="Save Your Inputs" /><br /><br />
+            <ul class="nav nav-tabs">
+                @foreach (Sitecore.Data.Items.Item tab in Model.Tabs)
+                {
+                    string active = (Model.Tabs.IndexOf(tab) == 0) ? "active" : "";
+                    string hrefString1 = "#menu" + Model.Tabs.IndexOf(tab).ToString();
+                    <li class="@active"><a href="@hrefString1">@tab.Name</a></li>
+                }
+            </ul>
 
-                        @foreach (Item subSection in tab.GetChildren())
-                    {
-                            <tr style="background-color:burlywood; font-weight:bold;">
-                                <td colspan="@colSpan">@subSection.Name</td>
+            <div class="tab-content">
+                @foreach (Item tab in Model.Tabs)
+                {
+                    string active = (Model.Tabs.IndexOf(tab) == 0) ? "active in" : "";
+                    string hrefString2 = "menu" + Model.Tabs.IndexOf(tab).ToString();
+                    int colSpan = Model.Trims.Count + 1;
+
+                    <div id="@hrefString2" class="tab-pane fade @active">
+                        <table>
+                            <tr>
+                                <td style="max-width:200px;">Katashiki</td>
+                                @foreach (Item trim in Model.Trims)
+                                {
+                                    <td>@Html.Sitecore().Field("Katashiki", trim)</td>
+
+                                }
                             </tr>
-                            foreach (Item spec in subSection.GetChildren())
+                            <tr>
+                                <td style="max-width:200px;">Katashiki Code</td>
+                                @foreach (Item trim in Model.Trims)
+                                {
+                                    <td>@Html.Sitecore().Field("Katashiki Code", trim)</td>
+                                }
+                            </tr>
+                            <tr>
+                                <td style="max-width:200px;">Description</td>
+
+                                @foreach (Item trim in Model.Trims)
+                                {
+                                    <td>@Html.Sitecore().Field("Description", trim)</td>
+                                }
+                            </tr>
+
+                            @foreach (Item subSection in tab.GetChildren())
                             {
-                                <tr>
-                                    <td style="max-width:200px;">@spec["Name Multiline"]</td>
-
-                                    @foreach (VAPI.Models.FullTrim trim in Model.FullTrims)
-                                    {
-                                        List<string> matches = trim.SopMatrixGuid.Split('/').ToList();
-                                        string match = matches.FirstOrDefault(x => x.Contains(spec.ID.ToString()));
-
-                                        if (match != null)
-                                        {
-                                            string[] a = match.Split(':');
-
-                                            <td>
-                                                @if (FieldTypeManager.GetField(spec.Fields["Spec"]) is ValueLookupField)
-                                                {
-                                                    Item sourceItem = Sitecore.Context.Database.GetItem(spec.Fields["Spec"].Source);
-
-                                                    ////List<string> options = sourceItem.GetChildren();
-                                                    //List<Dictionary<string, string>> options = new List<Dictionary<string, string>>();
-
-                                                    //foreach (Item item in sourceItem.GetChildren())
-                                                    //{
-                                                    //    options.ad
-                                                    //}
-
-                                                    //var options = from Item optionItem in sourceItem.GetChildren() select new List<Dictionary<string, string>> { Name };
-                                                    <div>
-                                                        @a[1]
-                                                    </div>
-
-                                                    <select>
-                                                        @foreach (Item option in sourceItem.GetChildren())
-                                                        {
-                                                            string selected = (a[1] == option.Name) ? "selected" : "";
-                                                            <option @selected>@option.Name</option>
-                                                        }
-                                                    </select>
-                                                }
-                                                else if (FieldTypeManager.GetField(spec.Fields["Spec"]) is TextField)
-                                                {
-                                                    <input type="text" value="@a[1]" />
-                                                }
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                        <td>NOT FOUND</td>
-                                        }
-                                    } 
+                                <tr style="background-color:burlywood; font-weight:bold;">
+                                    <td colspan="@colSpan">@subSection.Name</td>
                                 </tr>
+                                foreach (Item spec in subSection.GetChildren())
+                                {
+                                    <tr>
+                                        <td style="max-width:200px;">@spec["Name Multiline"]</td>
+
+                                        @*Redner spec values*@
+
+                                        @foreach (Item trim in Model.Trims)
+                                        {
+                                            List<string> matches = trim["SOP Matrix Guid"].Split('/').ToList();
+                                            string match = matches.FirstOrDefault(x => x.Contains(spec.ID.ToString()));
+
+                                            if (match != null)
+                                            {
+                                                string[] a = match.Split(':');
+
+                                                <td>
+                                                    @if (FieldTypeManager.GetField(spec.Fields["Spec"]) is ValueLookupField)
+                                                    {
+                                                        Item sourceItem = Sitecore.Context.Database.GetItem(spec.Fields["Spec"].Source);
+
+                                                        <div>
+                                                            @a[1]
+                                                        </div>
+
+                                                        <select>
+                                                            @foreach (Item option in sourceItem.GetChildren())
+                                                            {
+                                                                string selected = (a[1] == option.Name) ? "selected" : "";
+                                                                <option @selected>@option.Name</option>
+                                                            }
+                                                        </select>
+                                                    }
+                                                    else if (FieldTypeManager.GetField(spec.Fields["Spec"]) is TextField)
+                                                    {
+                                                        string specIdString = "trim" + trim.ID.ToString() + "/" + "spec" + spec.ID.ToString();
+                                                        <input id="@specIdString" onchange="UpdateSpecs(this.id + '/' + this.value);" type="text" value="@a[1]" />
+                                                        
+                                                    }
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>NOT FOUND</td>
+                                            }
+                                        }
+                                    </tr>
+                                }
                             }
-                        }
-                    </table>
-                </div>
-            }
+                        </table>
+                    </div>
+                }
+            </div>
         </div>
-    </div>
 }
 
 <script>
