@@ -15,6 +15,7 @@ namespace VAPI.Handlers
             // Extract the item from the event Arguments
             Item savedItem = Event.ExtractParameter(args, 0) as Item;
 
+
           
 
             //if (savedItem.TemplateID.ToString() == "{DD9FBE61-8565-44C8-8283-EC7FF04342E1}" ) // It's a Trim or an FSO

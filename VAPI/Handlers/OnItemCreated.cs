@@ -37,18 +37,18 @@ namespace VAPI.Handlers
                     // Do your edits here
                     foreach (Item featureFolder in featuresFolders)
                     {
-                        sbText.Append("<h1>").Append(featureFolder.Name).Append("</h1>").AppendLine();
+                        sbText.Append("<h1 style='color:blue';>").Append(featureFolder.Name).Append("</h1>").AppendLine();
                         //sbGuid.Append(featureFolder.Name).AppendLine();
 
                         foreach (Item tabSection in featureFolder.Children)
                         {
-                            sbText.Append("<h2>").Append(tabSection.Name).Append("</h2>").AppendLine().AppendLine();
+                            sbText.Append("<h2>").Append("*" + tabSection.Name).Append("</h2>").AppendLine().AppendLine();
                             //sbGuid.Append(tabSection.Name).AppendLine().AppendLine();
 
                             foreach (Item spec in tabSection.Children)
                             {
-                                sbText.Append("<div>").Append(spec["Name Multiline"]).Append(" : ").Append(spec["Spec"]).Append("</div>").AppendLine().AppendLine();
-                                sbGuid.Append(spec.ID).Append(" : ").Append(spec["Spec"]).Append("/");
+                                sbText.Append("<div>").Append(spec["Name Multiline"]).Append(":").Append(spec["Spec"]).Append("</div>").AppendLine().AppendLine();
+                                sbGuid.Append(spec.ID).Append(":").Append(spec["Spec"]).Append("/");
                             }
                         }
 
