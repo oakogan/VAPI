@@ -13,11 +13,11 @@ namespace VAPI.Handlers
         public void VAPIOnItemCreated(object sender, EventArgs args)
         {
             // Extract the item from the event Arguments
-            Item createdItem = Event.ExtractParameter(args, 0) as Item;
+            Item scItem = Event.ExtractParameter(args, 0) as Item;
 
-            if (createdItem.TemplateID.ToString() == "{DD9FBE61-8565-44C8-8283-EC7FF04342E1}" && string.IsNullOrEmpty(createdItem["SOP Matrix Text"])) // It's a Trim or an FSO
+            if (scItem.TemplateID.ToString() == Constants.TemplateIDs.TrimTemplateId && string.IsNullOrEmpty(scItem[Constants.FieldNames.SOPMatrixText_FieldName])) // It's a Trim 
             {
-                Item commonDataItem = createdItem.Parent.Parent.GetChildren().FirstOrDefault(x => x.TemplateID.ToString() == "{579820E7-297B-4EFC-AAA2-9AC7FA39B1CD}");
+                Item commonDataItem = scItem.Parent.Parent.GetChildren().FirstOrDefault(x => x.TemplateID.ToString() == Constants.TemplateIDs.CommonDataFolderId);
 
                 if (commonDataItem == null)
                     return;
@@ -32,12 +32,11 @@ namespace VAPI.Handlers
             
                 using (new SecurityDisabler())
                 {
-                    createdItem.Editing.BeginEdit();
-
-                    // Do your edits here
+                    scItem.Editing.BeginEdit();
+                  
                     foreach (Item featureFolder in featuresFolders)
                     {
-                        sbText.Append("<h1 style='color:blue';>").Append(featureFolder.Name).Append("</h1>").AppendLine();
+                        sbText.Append("<div style=' background-color: coral;'><h1 style='color:blue';>").Append(featureFolder.Name).Append("</h1></div>").AppendLine();
                         //sbGuid.Append(featureFolder.Name).AppendLine();
 
                         foreach (Item tabSection in featureFolder.Children)
@@ -47,19 +46,21 @@ namespace VAPI.Handlers
 
                             foreach (Item spec in tabSection.Children)
                             {
-                                sbText.Append("<div>").Append(spec["Name Multiline"]).Append(":").Append(spec["Spec"]).Append("</div>").AppendLine().AppendLine();
+                                sbText.Append("<div>").Append(spec[Constants.FieldNames.NameMultiline_FieldName]).Append(":").Append("</div>").AppendLine().AppendLine();
                                 sbGuid.Append(spec.ID).Append(":").Append(spec["Spec"]).Append("/");
                             }
                         }
 
                     }
 
-                    createdItem["SOP Matrix Text"] = sbText.ToString();
-                    createdItem["SOP Matrix Guid"] = sbGuid.ToString();
-                    createdItem.Editing.EndEdit();
+                    scItem["SOP Matrix Text"] = sbText.ToString();
+                    scItem["SOP Matrix Guid"] = sbGuid.ToString();
+                    scItem.Editing.EndEdit();
                 }
             }
-            else
+            else if(scItem.TemplateID.ToString() == Constants.TemplateIDs.FreeFormSpecTemplateId // It's a spec
+                || scItem.TemplateID.ToString() == Constants.TemplateIDs.PredefinedSpecTemplateId 
+                || scItem.TemplateID.ToString() == Constants.TemplateIDs.SOPSpecTemplateId)
             {
 
 

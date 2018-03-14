@@ -2,9 +2,17 @@
 @using System.Linq;
 @model VAPI.Models.CommonModel
 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>*@
 
 <script type="text/javascript">
-
+    function UpdateDopwDownSpecs(specIdString)
+    {
+        var currentValue = document.getElementById("UpdatedSpecs").value;
+        //alert(specIdString);
+        document.getElementById("UpdatedSpecs").value = currentValue + "*" + specIdString;
+    }
 
     function UpdateSpecs(specIdString) {
         var currentValue = document.getElementById("UpdatedSpecs").value;
@@ -113,27 +121,37 @@
                                             string[] a = match.Split(':');
 
                                             <td>
-                                                @if (FieldTypeManager.GetField(spec.Fields["Spec"]) is ValueLookupField)
+                                                @if (FieldTypeManager.GetField(spec.Fields["Spec"]) is ValueLookupField )
                                                 {
                                                     Item sourceItem = Sitecore.Context.Database.GetItem(spec.Fields["Spec"].Source);
+                                                    string specIdString = "trim" + trim.ID.ToString() + "/" + spec.ID.ToString();
 
-                                                    <div>
-                                                        @a[1]
-                                                    </div>
-
-                                                        <select>
-                                                            @foreach (Item option in sourceItem.GetChildren())
-                                                            {
-                                                                string selected = (a[1] == option.Name) ? "selected" : "";
-                                                                <option @selected>@option.Name</option>
-                                                            }
-                                                        </select>
+                                                    <select id="@specIdString" onchange="UpdateDopwDownSpecs(this.id + ':' + this.value);">
+                                                        @foreach (Item option in sourceItem.GetChildren())
+                                                        {
+                                                            string selected = (a[1] == option.Name) ? "selected" : "";
+                                                            <option @selected>@option.Name</option>
+                                                        }
+                                                    </select>
                                                 }
-                                                else if (FieldTypeManager.GetField(spec.Fields["Spec"]) is TextField)
+                                                else if (FieldTypeManager.GetField(spec.Fields["Spec"]) is TextField && spec.TemplateID.ToString() == Constants.TemplateIDs.FreeFormSpecTemplateId)
                                                 {
                                                     string specIdString = "trim" + trim.ID.ToString() + "/" + spec.ID.ToString();
+                                                   
                                                     <input id="@specIdString" onchange="UpdateSpecs(this.id + ':' + this.value);" type="text" value="@a[1]" />
 
+                                                }
+                                                else if (FieldTypeManager.GetField(spec.Fields["Spec"]) is TextField && spec.TemplateID.ToString() == Constants.TemplateIDs.PredefinedSpecTemplateId)
+                                                {
+                                                    //string par = "UpdateDopwDownSpecs(" + spec.ID.ToString() + ":" + this.value);";
+                                                    string specIdString = "trim" + trim.ID.ToString() + "/" + spec.ID.ToString();
+                                                    <select id="@specIdString" onchange="UpdateDopwDownSpecs(this.id + ':' + this.value);">
+                                                        @foreach (Item option in spec.GetChildren())
+                                                        {
+                                                            string selected = (a[1] == option.Name) ? "selected" : "";
+                                                            <option @selected>@option.Name</option>
+                                                        }
+                                                    </select>
                                                 }
                                             </td>
                                         }
@@ -141,16 +159,17 @@
                                         {
                                             @*<td>NOT FOUND</td>*@
                                             //string value = (!string.IsNullOrEmpty(spec["Name Multiline"])) ? spec["Spec"] : spec.Name;
-                                            <td style="background-color:turquoise;">
+                                            <td>
                                                 @if (FieldTypeManager.GetField(spec.Fields["Spec"]) is ValueLookupField)
                                                 {
                                                     Item sourceItem = Sitecore.Context.Database.GetItem(spec.Fields["Spec"].Source);
+                                                    string specIdString = "trim" + trim.ID.ToString() + "/" + spec.ID.ToString();
 
-                                                    <div>
+                                                    @*<div>
                                                        @spec["Spec"]
-                                                    </div>
+                                                    </div>*@
 
-                                                        <select>
+                                                        <select id="@specIdString" onchange="UpdateDopwDownSpecs(this.id + ':' + this.value);">
                                                             @foreach (Item option in sourceItem.GetChildren())
                                                             {
                                                                 string selected = (@spec["Spec"] == option.Name) ? "selected" : "";
@@ -158,13 +177,24 @@
                                                             }
                                                         </select>
                                                 }
-                                                else if (FieldTypeManager.GetField(spec.Fields["Spec"]) is TextField)
+                                                else if (FieldTypeManager.GetField(spec.Fields["Spec"]) is TextField && spec.TemplateID.ToString() == Constants.TemplateIDs.FreeFormSpecTemplateId)
                                                 {
                                                     string specIdString = "trim" + trim.ID.ToString() + "/" + spec.ID.ToString();
+                                                   
                                                     <input id="@specIdString" onchange="UpdateSpecs(this.id + ':' + this.value);" type="text" value="@spec["Spec"]" />
 
                                                 }
-
+                                                else if (FieldTypeManager.GetField(spec.Fields["Spec"]) is TextField && spec.TemplateID.ToString() == Constants.TemplateIDs.PredefinedSpecTemplateId)
+                                                {
+                                                    string specIdString = "trim" + trim.ID.ToString() + "/" + spec.ID.ToString();
+                                                    <select id="@specIdString" onchange="UpdateDopwDownSpecs(this.id + ':' + this.value);">
+                                                        @foreach (Item option in spec.GetChildren())
+                                                        {
+                                                            string selected = (spec["Spec"] == option.Name) ? "selected" : "";
+                                                            <option @selected>@option.Name</option>
+                                                        }
+                                                    </select>
+                                                }
 
 
 

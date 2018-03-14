@@ -120,7 +120,7 @@ namespace VAPI.Controllers
             foreach (Item subsection in test)
             {
                 string name = subsection.Name;
-                Item spec = trims.First().Axes.GetDescendants().FirstOrDefault(x => x["Name Multiline"] == "");
+                Item spec = trims.First().Axes.GetDescendants().FirstOrDefault(x => x[Constants.FieldNames.NameMultiline_FieldName] == "");
 
             }
 
@@ -209,7 +209,7 @@ namespace VAPI.Controllers
             foreach (Item trim in model.Trims)
             {
                 //get all value pairs for this trim
-                List<string> currentPairs = trim["SOP Matrix Guid"].Split('/').ToList();
+                List<string> currentPairs = trim[Constants.FieldNames.SOPMatrixGuid_FieldName].Split('/').ToList();
                 List<string> updatedPairs = records.Where(x => x.Contains(trim.ID.ToString())).ToList();
 
                 List<string> finalPairs = new List<string>();
@@ -227,7 +227,7 @@ namespace VAPI.Controllers
                         // Do your edits here
                         foreach (Item featureFolder in model.Tabs)
                         {
-                            sbText.Append("<h1>").Append(featureFolder.Name).Append("</h1>").AppendLine();
+                            sbText.Append("<div style=' background-color: coral;'><h1>").Append(featureFolder.Name).Append("</h1></div>").AppendLine();
                             //sbGuid.Append(featureFolder.Name).AppendLine();
 
                             foreach (Item tabSection in featureFolder.Children)
@@ -237,7 +237,7 @@ namespace VAPI.Controllers
 
                                 foreach (Item spec in tabSection.Children)
                                 {
-                                    bool update = false;
+                                    bool update = false; 
                                     //read currentg spec value
                                     string matchingSpecRecord = currentPairs.FirstOrDefault(x => x.Contains(spec.ID.ToString()));
                                     string specValue = string.Empty;
@@ -279,32 +279,27 @@ namespace VAPI.Controllers
                             }
                         }
 
-                        trim["SOP Matrix Text"] = sbText.ToString();
-                        trim["SOP Matrix Guid"] = sbGuid.ToString();
+                        trim[Constants.FieldNames.SOPMatrixText_FieldName] = sbText.ToString();
+                        trim[Constants.FieldNames.SOPMatrixGuid_FieldName] = sbGuid.ToString();
                         trim.Editing.EndEdit();
-
-
                     } // end of using for trim
-
-
                 } //if (updatedPairs != null)
-                newFsoString = newFsoString + "<br><br><div><h1 style='color:blue';>========" + trim.Name + "===========</h1></div>";
-                //(sbText.Append("========== ").Append(trim.Name).Append("===========").AppendLine()).ToString();
-                string currentMatrixFieldValue = trim[Constants.SOPMatrixText_FieldName];
-                newFsoString = newFsoString + currentMatrixFieldValue;
 
+                newFsoString = newFsoString + "<br><br><div><h1 style='color:blue';>       " + trim.Name + "</h1></div>";
+                string currentMatrixFieldValue = trim[Constants.FieldNames.SOPMatrixText_FieldName];
+                newFsoString = newFsoString + currentMatrixFieldValue;
             } //end of foreach (Item trim in model.Trims)
 
             //updated FSO Matrix field
             using (new SecurityDisabler())
             {
                 fsoItem.Editing.BeginEdit();
-                fsoItem[Constants.SOPMatrixText_FieldName] = newFsoString;
-                // fsoItem[Constants.SOPMatrixText_FieldName] = currectFsoMatrixFieldValue + (sbText.Append("========== ").Append(trim.Name).Append("===========").AppendLine()).ToString();
+                fsoItem[Constants.FieldNames.SOPMatrixText_FieldName] = newFsoString;
                 fsoItem.Editing.EndEdit();
             }
 
             return View("~/Views/FSO/FSONew.cshtml", model);
+            //return RedirectToAction("LoadFSO");
         }
 
         public CommonModel InitializeTrims(CommonModel model)
@@ -319,8 +314,6 @@ namespace VAPI.Controllers
             {
                 contextItem = Sitecore.Context.Item;
             }
-
-            //model.ContextItemId = contextItemId;
 
             Item parent = contextItem.Parent;
             List<Item> yearChildren = parent.GetChildren().ToList();
@@ -382,6 +375,30 @@ namespace VAPI.Controllers
             model.MatrixGuidString = new List<string>();
 
             return model;
+        }
+
+        public ActionResult GetSeriesById(string seriesId)
+        {   
+            return Json(new
+            {
+                //operatingprofitannual = (_Helpers.ConvertToDouble(clientModel.Ff_TotalRevenueAnnualized) * PM).ToString(),
+                //profitmarginannual = PM,
+                //maxvalue = (maxValueForClient > maxValueForComparative) ? maxValueForClient.ToString() : maxValueForComparative.ToString(),
+                //currentmin = clientModel.ClientValuationModel.ValuationMin,
+                //currentmax = clientModel.ClientValuationModel.ValuationMax,
+
+                //calculatedmax = comparativeValuationMax,
+                //calculatedmin = comparativeValuationMin,
+                //pagr = _Helpers.ConvertToDouble(clientModel.Ff_ProjectedGrowthRate) / 100,
+                //vmi = clientModel.Vmi_Index,
+
+                //top_pagr_max = 12,
+                //top_pagr_min = 8,
+                //top_pm_max = 40,
+                //top_pm_min = 20,
+                //top_vmi_max = 900,
+                //top_vmi_min = 700
+            }, JsonRequestBehavior.AllowGet);
         }
     }
 
