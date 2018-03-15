@@ -228,12 +228,10 @@ namespace VAPI.Controllers
                         foreach (Item featureFolder in model.Tabs)
                         {
                             sbText.Append("<div style=' background-color: coral;'><h1>").Append(featureFolder.Name).Append("</h1></div>").AppendLine();
-                            //sbGuid.Append(featureFolder.Name).AppendLine();
 
                             foreach (Item tabSection in featureFolder.Children)
                             {
                                 sbText.Append("<h2>").Append("*" + tabSection.Name).Append("</h2>").AppendLine().AppendLine();
-                                //sbGuid.Append(tabSection.Name).AppendLine().AppendLine();
 
                                 foreach (Item spec in tabSection.Children)
                                 {
@@ -255,25 +253,20 @@ namespace VAPI.Controllers
                                                 specValue = updatedPair.Split(':')[1];
                                                 break;
                                             }
-                                        }
-
-                                       
+                                        }                                       
                                     }
                                     else //new spec present
                                     {
-                                        // specValue = spec["Spec"];
                                         string y = updatedPairs.FirstOrDefault(x => x.Contains(spec.ID.ToString()));
-
                                         
                                         if(!string.IsNullOrEmpty(y))
                                         {
                                             string[] pair = y.Split(':');
                                             specValue = pair[1];
-                                        }
-                                        
+                                        }                                        
                                     }
 
-                                    sbText.Append("<div>").Append(spec["Name Multiline"]).Append(":").Append(specValue).Append("</div>").AppendLine().AppendLine();
+                                    sbText.Append("<div>").Append(spec[Constants.FieldNames.NameMultiline_FieldName]).Append(":").Append(specValue).Append("</div>").AppendLine().AppendLine();
                                     sbGuid.Append(spec.ID).Append(":").Append(specValue).Append("/");
                                 }
                             }

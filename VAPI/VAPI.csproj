@@ -218,6 +218,8 @@
     </Compile>
     <Compile Include="Handlers\OnItemCreated.cs" />
     <Compile Include="Handlers\OnItemSaved.cs" />
+    <Compile Include="Handlers\OnItemSaving.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="Models\CommonModel.cs" />
     <Compile Include="Models\FsoModel.cs" />
     <Compile Include="Models\Trim.cs" />
