@@ -11,15 +11,19 @@ namespace VAPI.Handlers
         {
             // Extract the item from the event Arguments
             Item scItem = Event.ExtractParameter(args, 0) as Item;
-            Item fsoItem = Helpers.GetCurrentFsoItem(scItem);
+            
 
             if (scItem.TemplateID.ToString() == Constants.TemplateIDs.FreeFormSpec_TemplateId // It's a spec
                 || scItem.TemplateID.ToString() == Constants.TemplateIDs.PredefinedSpec_TemplateId
                 || scItem.TemplateID.ToString() == Constants.TemplateIDs.SOPSpec_TemplateId)
-            {              
+            {
+                Item fsoItem = Helpers.GetCurrentFsoItem(scItem);
                 Item existingItem = scItem.Database.GetItem(scItem.ID, scItem.Language, scItem.Version);
                 Sitecore.Diagnostics.Assert.IsNotNull(existingItem, "existingItem");
                 string oldSpecName = existingItem[Constants.FieldNames.NameMultiline_FieldName];
+
+                if (string.IsNullOrEmpty(oldSpecName)) // to prevent publishing error
+                    return;
 
                 Item trimsFolder = Helpers.GetCurrentTrimsFolderItem(scItem);
 

@@ -217,6 +217,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Handlers\OnItemCreated.cs" />
+    <Compile Include="Handlers\OnItemDeleted.cs" />
     <Compile Include="Handlers\OnItemSaved.cs" />
     <Compile Include="Handlers\OnItemSaving.cs" />
     <Compile Include="Helpers.cs" />

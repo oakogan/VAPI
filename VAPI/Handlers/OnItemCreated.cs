@@ -13,13 +13,17 @@ namespace VAPI.Handlers
         public void VAPIOnItemCreated(object sender, EventArgs args)
         {
             // Extract the item from the event Arguments
-            Item scItem = Event.ExtractParameter(args, 0) as Item;
-            Item effectedItem = null;
+            Item scItem = Event.ExtractParameter(args, 0) as Item;            
 
-            if (scItem.TemplateID.ToString() == Constants.TemplateIDs.Trim_TemplateId && string.IsNullOrEmpty(scItem[Constants.FieldNames.SOPMatrixText_FieldName])// It's a Trim 
-                || scItem.TemplateID.ToString() == Constants.TemplateIDs.FreeFormSpec_TemplateId // It's a spec
-                || scItem.TemplateID.ToString() == Constants.TemplateIDs.PredefinedSpec_TemplateId
-                || scItem.TemplateID.ToString() == Constants.TemplateIDs.SOPSpec_TemplateId)
+            if (scItem == null)
+                return;
+
+            Item fsoItem = Helpers.GetCurrentFsoItem(scItem);
+
+            if (fsoItem == null)
+                return;
+
+            if (scItem.TemplateID.ToString() == Constants.TemplateIDs.Trim_TemplateId && string.IsNullOrEmpty(scItem[Constants.FieldNames.SOPMatrixText_FieldName]))// It's a Trim 
             {
                 Item commonDataItem = Helpers.GetCurrentDataFolderItem(scItem);
 
@@ -37,7 +41,7 @@ namespace VAPI.Handlers
 
                 foreach (Item featureFolder in featuresFolders)
                 {
-                    sbText.Append("<div style=' background-color: coral;'><h1 style='color:blue';>").Append(featureFolder.Name).Append("</h1></div>").AppendLine();
+                    sbText.Append("<div><h1 style='color:blue';>").Append(featureFolder.Name).Append("</h1></div>").AppendLine();
 
                     foreach (Item tabSection in featureFolder.Children)
                     {
@@ -51,37 +55,18 @@ namespace VAPI.Handlers
                     }
                 }
 
-                if (scItem.TemplateID.ToString() == Constants.TemplateIDs.Trim_TemplateId) //update Trim being saved
+                using (new SecurityDisabler())
                 {
-                    using (new SecurityDisabler())
-                    {
-                        scItem.Editing.BeginEdit();
+                    scItem.Editing.BeginEdit(); //update Trim item
+                    scItem[Constants.FieldNames.SOPMatrixText_FieldName] = sbText.ToString();
+                    scItem[Constants.FieldNames.SOPMatrixGuid_FieldName] = sbGuid.ToString();
+                    scItem.Editing.EndEdit();
 
-                        scItem["SOP Matrix Text"] = sbText.ToString();
-                        scItem["SOP Matrix Guid"] = sbGuid.ToString();
-
-                        scItem.Editing.EndEdit();
-                    }
-                }
-                else // update all Trims
-                {
-                    Item trimsFolder = Helpers.GetCurrentTrimsFolderItem(scItem);
-
-                    foreach (Item trim in trimsFolder.GetChildren())
-                    {
-                        // string matrixTextFieldValue = trim[Constants.FieldNames.SOPMatrixText_FieldName];
-                        //matrixTextFieldValue.Replace(scItem[Constants.FieldNames.NameMultiline_FieldName])
-
-                        using (new SecurityDisabler())
-                        {
-                            scItem.Editing.BeginEdit();
-
-                            //trim[Constants.FieldNames.SOPMatrixText_FieldName] = sbText.ToString();
-
-                            scItem.Editing.EndEdit();
-                        }     
-                    }
-                }
+                    fsoItem.Editing.BeginEdit(); //update FSO item
+                    string currentFsoValueString = fsoItem[Constants.FieldNames.SOPMatrixText_FieldName];
+                    fsoItem[Constants.FieldNames.SOPMatrixText_FieldName] = currentFsoValueString + "<div style=' background-color: coral;'><h1>     " + scItem.Name + "</h1></div>" + sbText.ToString();                  
+                    fsoItem.Editing.EndEdit();
+                }    
             }
         }
     }

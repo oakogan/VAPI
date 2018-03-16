@@ -8,18 +8,18 @@ namespace VAPI.Models
        // public List<FullTrim> FullTrims { get; set; }
         public List<Item> Trims { get; set; }
         public List<Item> Tabs { get; set; }
-        public List<string> MatrixGuidString { get; set; }
+        //public List<string> MatrixGuidString { get; set; }
         public string ContextItemId { get; set; }
         public string UpdatedSpecs { get; set; }
     }
 
-    public class FullTrim
-    {
-        //public List<FullTab> FullTabs { get; set; }
-        public Item SitecoreTrim { get; set; }
-        public string SopMatrixGuid { get; set; }
-        public string SopMatrixText { get; set; }
-    }
+    //public class FullTrim
+    //{
+    //    //public List<FullTab> FullTabs { get; set; }
+    //    public Item SitecoreTrim { get; set; }
+    //    public string SopMatrixGuid { get; set; }
+    //    public string SopMatrixText { get; set; }
+    //}
 
     //public class FullTab
     //{

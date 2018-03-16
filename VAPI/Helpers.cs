@@ -1,9 +1,6 @@
 ﻿using Sitecore.Data;
 using Sitecore.Data.Items;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace VAPI
 {
@@ -11,7 +8,7 @@ namespace VAPI
     {
         public static Item GetCurrentYearItem(Item item)
         {
-            while (item.TemplateID != new ID(Constants.TemplateIDs.YearFolder_TemplateId))
+            while (item.TemplateID != new ID(Constants.TemplateIDs.YearFolder_TemplateId) && item.Parent != null)
             {
                 item = item.Parent;
             }
