@@ -50,6 +50,7 @@
 
     @Html.HiddenFor(model => Model.ContextItemId)
     @Html.HiddenFor(model => Model.UpdatedSpecs)
+    @Html.HiddenFor(model => Model.PreviewUrl)
 
     <div class="container">
         <h2>@Html.Sitecore().Field("SOP Matrix Guid", Sitecore.Context.Item)</h2> <input type="submit" name="submit" value="Save Your Inputs" /><br /><br />
@@ -203,7 +204,7 @@
 }
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function () {       
         $(".nav-tabs a").click(function () {
             $(this).tab('show');
         });

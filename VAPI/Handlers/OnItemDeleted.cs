@@ -49,7 +49,7 @@ namespace VAPI.Handlers
                     fsoItem[Constants.FieldNames.SOPMatrixText_FieldName] = sbText.ToString();
                     fsoItem.Editing.EndEdit();
                 }
-            }
+            }            
         }
     }
 }

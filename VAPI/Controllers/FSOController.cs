@@ -13,8 +13,8 @@ namespace VAPI.Controllers
         #region ActionMethods
         public ActionResult LoadFSO()
         {
-            CommonModel model = InitializeTrims(new CommonModel() { ContextItemId = Sitecore.Context.Item.ID.ToString() });           
-
+            CommonModel model = InitializeTrims(new CommonModel() { ContextItemId = Sitecore.Context.Item.ID.ToString(), PreviewUrl = HttpContext.Request.Url.AbsoluteUri });
+           
             return View("~/Views/FSO/FSONew.cshtml", model);
         }
 
@@ -22,9 +22,10 @@ namespace VAPI.Controllers
         /// Action method to handle user input
         /// </summary>      
         [HttpPost]
-        public ActionResult FsoSave(CommonModel model)
+        public void FsoSave(CommonModel model)
         {
             model = InitializeTrims(model);
+            
             Item fsoItem = Sitecore.Context.Database.GetItem(model.ContextItemId);
 
             string updatedSpecs = model.UpdatedSpecs;
@@ -52,7 +53,7 @@ namespace VAPI.Controllers
                         // Do your edits here
                         foreach (Item featureFolder in model.Tabs)
                         {
-                            sbText.Append("<div style=' background-color: coral;'><h1>").Append(featureFolder.Name).Append("</h1></div>").AppendLine();
+                            sbText.Append("<div style='color:blue;'><h1>").Append(featureFolder.Name).Append("</h1></div>").AppendLine();
 
                             foreach (Item tabSection in featureFolder.Children)
                             {
@@ -103,7 +104,7 @@ namespace VAPI.Controllers
                     } // end of using for trim
                 } //if (updatedPairs != null)
 
-                newFsoString = newFsoString + "<br><br><div><h1 style='color:blue';>       " + trim.Name + "</h1></div>";
+                newFsoString = newFsoString + "<br><br><div><h1 style='background-color:coral';>       " + trim.Name + "</h1></div>";
                 string currentMatrixFieldValue = trim[Constants.FieldNames.SOPMatrixText_FieldName];
                 newFsoString = newFsoString + currentMatrixFieldValue;
             } //end of foreach (Item trim in model.Trims)
@@ -116,8 +117,9 @@ namespace VAPI.Controllers
                 fsoItem.Editing.EndEdit();
             }
 
-            return View("~/Views/FSO/FSONew.cshtml", model);
+            //return View("~/Views/FSO/FSONew.cshtml", model);
             //return RedirectToAction("LoadFSO");
+            Response.Redirect(model.PreviewUrl);
         }
 
         #endregion

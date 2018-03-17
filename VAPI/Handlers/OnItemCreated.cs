@@ -23,22 +23,20 @@ namespace VAPI.Handlers
             if (fsoItem == null)
                 return;
 
+            Item commonDataItem = Helpers.GetCurrentDataFolderItem(scItem);
+
+            if (commonDataItem == null)
+                return;
+
+            StringBuilder sbText = new StringBuilder();
+            StringBuilder sbGuid = new StringBuilder();
+
+            List<Item> featuresFolders = commonDataItem.GetChildren().ToList();
+            if (featuresFolders == null || !featuresFolders.Any())
+                return;
+
             if (scItem.TemplateID.ToString() == Constants.TemplateIDs.Trim_TemplateId && string.IsNullOrEmpty(scItem[Constants.FieldNames.SOPMatrixText_FieldName]))// It's a Trim 
-            {
-                Item commonDataItem = Helpers.GetCurrentDataFolderItem(scItem);
-
-                if (commonDataItem == null)
-                    return;
-
-                StringBuilder sbText = new StringBuilder();
-                StringBuilder sbGuid = new StringBuilder();
-
-                //Custom save 
-                List<Item> featuresFolders = commonDataItem.GetChildren().ToList();
-                if (featuresFolders == null || !featuresFolders.Any())
-                    return;
-
-
+            {    
                 foreach (Item featureFolder in featuresFolders)
                 {
                     sbText.Append("<div><h1 style='color:blue';>").Append(featureFolder.Name).Append("</h1></div>").AppendLine();
@@ -68,6 +66,10 @@ namespace VAPI.Handlers
                     fsoItem.Editing.EndEdit();
                 }    
             }
+            //If a new spec is created it gets written to Matrix fields upon save in the FSO vew
+
+
+
         }
     }
 }
