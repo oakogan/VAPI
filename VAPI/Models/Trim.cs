@@ -6,7 +6,7 @@ using System.Web;
 
 namespace VAPI.Models
 {
-    public class Trim
+    public class TrimOld
     {
         public string Name { get; set; }
         public string Katashiki { get; set; }

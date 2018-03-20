@@ -5,6 +5,9 @@ using Sitecore.Data.Items;
 using VAPI.Models;
 using System.Text;
 using Sitecore.SecurityModel;
+using Sitecore.Data.Items;
+using Sitecore.Data;
+using System.Web.Script.Serialization;
 
 namespace VAPI.Controllers
 {
@@ -183,29 +186,83 @@ namespace VAPI.Controllers
                 {
                     message = "No result"
                 }, JsonRequestBehavior.AllowGet);
+            }           
+
+            List<Item> years = seriesItem.GetChildren().Where(x => x.TemplateID == new ID(Constants.TemplateIDs.YearFolder_TemplateId)).ToList();
+
+            if(years == null || !years.Any())
+                return Json(new
+                {
+                    message = "No result"
+                }, JsonRequestBehavior.AllowGet);
+
+
+            SeriesModel model = new SeriesModel();
+            model.Years = new List<Year>();
+            //model.Years = (from c in years select new Year { Number = c.Name, Trims = new List<Trim>() }).ToList();
+
+            //foreach(Year year in model.Years)
+            //{
+            //    List<Trim> trims = new List<Trim>();
+
+            //    Item yearItem = years.FirstOrDefault(x => x.Name == year.Number);
+
+            //    if(yearItem != null)
+            //    {
+
+            //    }
+            //}
+
+           
+
+            foreach (Item year in years)
+            {
+                List<Trim> trims = (from t in year.Axes.GetDescendants()
+                         .Where(x => x.TemplateID == new ID(Constants.TemplateIDs.Trim_TemplateId))
+                         select new Trim { Katashiki = t["Katashiki"], KatashikiCode = t["CatashikiCode"] }).ToList();
+
+                model.Years.Add(new Year() {Number = year.Name, Trims = trims });
+
+                //foreach (Item trim in year.GetChildren().Where(x => x.TemplateID == new ID(Constants.TemplateIDs.Trim_TemplateId)))
+                //{
+
+                //}
+
+               // Item trimsFolder = year.GetChildren().FirstOrDefault(x => x.TemplateID == new ID(""));
+
+
             }
+
+            var serializer = new JavaScriptSerializer();
+            var jsonModel = serializer.Serialize(model);
 
             return Json(new
             {
-                message = "No data yet"
-                //operatingprofitannual = (_Helpers.ConvertToDouble(clientModel.Ff_TotalRevenueAnnualized) * PM).ToString(),
-                //profitmarginannual = PM,
-                //maxvalue = (maxValueForClient > maxValueForComparative) ? maxValueForClient.ToString() : maxValueForComparative.ToString(),
-                //currentmin = clientModel.ClientValuationModel.ValuationMin,
-                //currentmax = clientModel.ClientValuationModel.ValuationMax,
+                jsonModel               
+        }, JsonRequestBehavior.AllowGet);
 
-                //calculatedmax = comparativeValuationMax,
-                //calculatedmin = comparativeValuationMin,
-                //pagr = _Helpers.ConvertToDouble(clientModel.Ff_ProjectedGrowthRate) / 100,
-                //vmi = clientModel.Vmi_Index,
 
-                //top_pagr_max = 12,
-                //top_pagr_min = 8,
-                //top_pm_max = 40,
-                //top_pm_min = 20,
-                //top_vmi_max = 900,
-                //top_vmi_min = 700
-            }, JsonRequestBehavior.AllowGet);
+            //return Json(new
+            //{
+            //    message = "No data yet"
+            //    //operatingprofitannual = (_Helpers.ConvertToDouble(clientModel.Ff_TotalRevenueAnnualized) * PM).ToString(),
+            //    //profitmarginannual = PM,
+            //    //maxvalue = (maxValueForClient > maxValueForComparative) ? maxValueForClient.ToString() : maxValueForComparative.ToString(),
+            //    //currentmin = clientModel.ClientValuationModel.ValuationMin,
+            //    //currentmax = clientModel.ClientValuationModel.ValuationMax,
+
+            //    //calculatedmax = comparativeValuationMax,
+            //    //calculatedmin = comparativeValuationMin,
+            //    //pagr = _Helpers.ConvertToDouble(clientModel.Ff_ProjectedGrowthRate) / 100,
+            //    //vmi = clientModel.Vmi_Index,
+
+            //    //top_pagr_max = 12,
+            //    //top_pagr_min = 8,
+            //    //top_pm_max = 40,
+            //    //top_pm_min = 20,
+            //    //top_vmi_max = 900,
+            //    //top_vmi_min = 700
+            //}, JsonRequestBehavior.AllowGet);
         }
 
         #endregion

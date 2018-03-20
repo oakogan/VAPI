@@ -223,6 +223,7 @@
     <Compile Include="Helpers.cs" />
     <Compile Include="Models\CommonModel.cs" />
     <Compile Include="Models\FsoModel.cs" />
+    <Compile Include="Models\SeriesModel.cs" />
     <Compile Include="Models\Trim.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
