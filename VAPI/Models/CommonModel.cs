@@ -10,5 +10,7 @@ namespace VAPI.Models
         public string ContextItemId { get; set; }
         public string UpdatedSpecs { get; set; }
         public string PreviewUrl { get; set; }
+
+        public string SeriesItemName { get; set; }
     }
 }

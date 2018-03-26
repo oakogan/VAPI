@@ -7,6 +7,7 @@ namespace VAPI.Models
 {
     public class SeriesModel
     {
+        public string SeriesName { get; set; }
         public List<Year> Years { get; set; }
     }
 

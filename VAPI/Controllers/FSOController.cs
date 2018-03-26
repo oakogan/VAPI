@@ -17,7 +17,11 @@ namespace VAPI.Controllers
         public ActionResult LoadFSO()
         {
             CommonModel model = InitializeTrims(new CommonModel() { ContextItemId = Sitecore.Context.Item.ID.ToString(), PreviewUrl = HttpContext.Request.Url.AbsoluteUri });
-           
+            Item seriesItem = Helpers.GetCurrentSeriesItem(Sitecore.Context.Item);
+            Item yearItem = Helpers.GetCurrentYearItem(Sitecore.Context.Item);
+
+            model.SeriesItemName = seriesItem.Name + " " + yearItem.Name;
+
             return View("~/Views/FSO/FSONew.cshtml", model);
         }
 
@@ -28,8 +32,13 @@ namespace VAPI.Controllers
         public void FsoSave(CommonModel model)
         {
             model = InitializeTrims(model);
+
+           
             
             Item fsoItem = Sitecore.Context.Database.GetItem(model.ContextItemId);
+            Item yearItem = Helpers.GetCurrentYearItem(fsoItem);
+            Item seriesItem = Helpers.GetCurrentSeriesItem(fsoItem);
+            model.SeriesItemName = seriesItem.Name + " " + yearItem.Name; 
 
             string updatedSpecs = model.UpdatedSpecs;
             List<string> records = updatedSpecs.Split('*').ToList();
@@ -198,22 +207,8 @@ namespace VAPI.Controllers
 
 
             SeriesModel model = new SeriesModel();
-            model.Years = new List<Year>();
-            //model.Years = (from c in years select new Year { Number = c.Name, Trims = new List<Trim>() }).ToList();
-
-            //foreach(Year year in model.Years)
-            //{
-            //    List<Trim> trims = new List<Trim>();
-
-            //    Item yearItem = years.FirstOrDefault(x => x.Name == year.Number);
-
-            //    if(yearItem != null)
-            //    {
-
-            //    }
-            //}
-
-           
+            model.SeriesName = seriesItem.Name;
+            model.Years = new List<Year>();                     
 
             foreach (Item year in years)
             {
@@ -222,23 +217,14 @@ namespace VAPI.Controllers
                          select new Trim { Katashiki = t["Katashiki"], KatashikiCode = t["CatashikiCode"] }).ToList();
 
                 model.Years.Add(new Year() {Number = year.Name, Trims = trims });
-
-                //foreach (Item trim in year.GetChildren().Where(x => x.TemplateID == new ID(Constants.TemplateIDs.Trim_TemplateId)))
-                //{
-
-                //}
-
-               // Item trimsFolder = year.GetChildren().FirstOrDefault(x => x.TemplateID == new ID(""));
-
-
             }
 
             var serializer = new JavaScriptSerializer();
-            var jsonModel = serializer.Serialize(model);
+            string VAPI = serializer.Serialize(model);
 
             return Json(new
             {
-                jsonModel               
+                VAPI               
         }, JsonRequestBehavior.AllowGet);
 
 
@@ -266,5 +252,7 @@ namespace VAPI.Controllers
         }
 
         #endregion
+
+        
     }
 }

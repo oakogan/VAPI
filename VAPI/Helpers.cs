@@ -51,5 +51,17 @@ namespace VAPI
 
             return item;
         }
+
+        public static Item GetCurrentSeriesItem(Item item)
+        {
+            Item yearItem = GetCurrentYearItem(item);
+
+            Item seriesItem = yearItem.Parent;
+
+            if (seriesItem != null)
+                return seriesItem;
+
+            return null;
+        }
     }
 }

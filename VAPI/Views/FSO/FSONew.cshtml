@@ -53,6 +53,7 @@
     @Html.HiddenFor(model => Model.PreviewUrl)
 
     <div class="container">
+        <h1>@Model.SeriesItemName</h1>
         <h2>@Html.Sitecore().Field("SOP Matrix Guid", Sitecore.Context.Item)</h2> <input type="submit" name="submit" value="Save Your Inputs" /><br /><br />
         <ul class="nav nav-tabs">
             @foreach (Sitecore.Data.Items.Item tab in Model.Tabs)
@@ -104,7 +105,7 @@
                             foreach (Item spec in subSection.GetChildren())
                             {
                                 <tr>
-                                    <td style="max-width:200px;">@spec["Name Multiline"]</td>
+                                    <td style="max-width:200px;">@Html.Sitecore().Field(Constants.FieldNames.NameMultiline_FieldName, spec)</td>
 
                                     @*Redner spec values*@
 
@@ -145,8 +146,8 @@
                                                     <select id="@specIdString" onchange="UpdateDopwDownSpecs(this.id + ':' + this.value);">
                                                         @foreach (Item option in spec.GetChildren())
                                                         {
-                                                            string selected = (a[1] == option.Name) ? "selected" : "";
-                                                            <option @selected>@option.Name</option>
+                                                            string selected = (a[1] == option["Name"]) ? "selected" : "";
+                                                            <option @selected>@option["Name"]</option>
                                                         }
                                                     </select>
                                                 }
@@ -185,8 +186,8 @@
                                                     <select id="@specIdString" onchange="UpdateDopwDownSpecs(this.id + ':' + this.value);">
                                                         @foreach (Item option in spec.GetChildren())
                                                         {
-                                                            string selected = (spec["Spec"] == option.Name) ? "selected" : "";
-                                                            <option @selected>@option.Name</option>
+                                                            string selected = (spec["Spec"] == option["Name"]) ? "selected" : "";
+                                                            <option @selected>@option["Name"]</option>
                                                         }
                                                     </select>
                                                 }

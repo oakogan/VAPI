@@ -206,6 +206,7 @@
     <Content Include="Views\FSO\Index.cshtml" />
     <Content Include="Views\FSO\CommonFSO.cshtml" />
     <Content Include="Views\FSO\FSONew.cshtml" />
+    <Content Include="Views\MockToyotaSite\BuildAndPrice.cshtml" />
     <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -213,6 +214,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Controllers\FSOController.cs" />
+    <Compile Include="Controllers\MockToyotaController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
