@@ -179,7 +179,7 @@ namespace VAPI.Controllers
             // $.getJSON('/assetmarkBAT/getvaluationmetrics?pagr=' + $scope.pagr.trans + '&pm=' + $scope.pm.trans + '&vmi=' + $scope.vmi.trans + '&recalculate=' + $scope.recalculate + '&report=' + $scope.report, function (data) {
 
             //http://nine1.local/api/sitecore/FSO/GetSeriesById
-            //http://nine1.local/api/sitecore/FSO/GetSeriesById?seriesId={7D5179AD-845C-4A76-A074-4F3A2999AE38}
+            //http://nine1.local/api/sitecore/FSO/GetSeriesById?seriesId={7D5179AD-845C-4A76-A074-4F3A2999AE38}&year=2018
 
             if (string.IsNullOrEmpty(seriesId))
                 return Json(new

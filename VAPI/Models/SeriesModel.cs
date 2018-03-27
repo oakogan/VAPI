@@ -39,5 +39,6 @@ namespace VAPI.Models
         public string KatashikiCode { get; set; }
         public string ModelNumber { get; set; }
         public string Description { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

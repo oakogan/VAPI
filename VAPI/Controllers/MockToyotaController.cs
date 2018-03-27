@@ -1,8 +1,12 @@
-﻿using System;
+﻿using Sitecore;
+using Sitecore.Data.Items;
+using Sitecore.Resources.Media;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using VAPI.Models;
 
 namespace VAPI.Controllers
 {
@@ -18,8 +22,68 @@ namespace VAPI.Controllers
 
         public ActionResult LoadBuildAndPrice()
         {
+           SeriesModel model = new SeriesModel();
 
-            return View("~/Views/MockToyotaSite/BuildAndPrice.cshtml");
+            Item seriesItem = Helpers.GetCurrentSeriesItem(Sitecore.Context.Item);
+            Item yearItem = Helpers.GetCurrentYearItem(Sitecore.Context.Item);
+
+            Year year = new Year() { Number = seriesItem.Name + " " + yearItem.Name, Trims = InitializeTrims(Sitecore.Context.Item).ToList() };
+
+            model.Years = new List<Year>() { year };
+            
+
+            model.SeriesName = seriesItem.Name + " " + yearItem.Name; 
+
+            return View("~/Views/MockToyotaSite/BuildAndPrice.cshtml", year);
+        }
+
+        private string GetImageUrl(Item item)
+        {
+            Sitecore.Data.Fields.ImageField imageField = item.Fields["Image"];
+            var imageUrl = string.Empty;
+
+            if (imageField?.MediaItem != null)
+            {
+                var image = new MediaItem(imageField.MediaItem);
+                imageUrl = StringUtil.EnsurePrefix('/', MediaManager.GetMediaUrl(image));
+            }
+
+            return imageUrl;
+        }
+
+        private IEnumerable<Trim> InitializeTrims(Item contextItem)
+        {
+            //Item contextItem = null;
+
+            //if (Sitecore.Context.Item == null)
+            //{
+            //    contextItem = Sitecore.Context.Database.GetItem(model.ContextItemId);
+            //}
+            //else
+            //{
+            //    contextItem = Sitecore.Context.Item;
+            //}
+
+            List<Item> trimItems = null;
+            //List<Trim> trims = new List<Trim>();
+
+
+            Item trimsFolder = Helpers.GetCurrentTrimsFolderItem(contextItem);
+            if (trimsFolder != null)
+            {
+                trimItems = trimsFolder.GetChildren().ToList();
+
+                var test = trimItems.Select(e => new Trim
+                {
+                    Katashiki = e["Katashiki"],
+                    Description = e["Description"],
+                    ImageUrl = GetImageUrl(e)
+                });
+
+                return test;
+            }
+
+            return null;
         }
 
         #endregion
