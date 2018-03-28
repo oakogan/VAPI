@@ -22,19 +22,23 @@ namespace VAPI.Controllers
 
         public ActionResult LoadBuildAndPrice()
         {
-           SeriesModel model = new SeriesModel();
+            //read query string for Series           
+            if (string.IsNullOrEmpty(Request.QueryString["seriesId"]))
+                return new EmptyResult();
 
-            Item seriesItem = Helpers.GetCurrentSeriesItem(Sitecore.Context.Item);
-            Item yearItem = Helpers.GetCurrentYearItem(Sitecore.Context.Item);
+            string seriesId = Request.QueryString["seriesId"];
 
-            Year year = new Year() { Number = seriesItem.Name + " " + yearItem.Name, Trims = InitializeTrims(Sitecore.Context.Item).ToList() };
+            //read query string for Year           
+            string yearParam = Request.QueryString["year"];
+            if (string.IsNullOrEmpty(yearParam))
+            {
+                yearParam = DateTime.Now.Year.ToString();
+            }
 
-            model.Years = new List<Year>() { year };
-            
+            SeriesModel model = Helpers.InitializeSeriesModel(seriesId, yearParam);
 
-            model.SeriesName = seriesItem.Name + " " + yearItem.Name; 
 
-            return View("~/Views/MockToyotaSite/BuildAndPrice.cshtml", year);
+            return View("~/Views/MockToyotaSite/BuildAndPrice.cshtml", model.Years.First());
         }
 
         private string GetImageUrl(Item item)

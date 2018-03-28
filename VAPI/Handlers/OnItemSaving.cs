@@ -11,6 +11,9 @@ namespace VAPI.Handlers
         {
             // Extract the item from the event Arguments
             Item scItem = Event.ExtractParameter(args, 0) as Item;
+
+            if (scItem.Paths.FullPath.Contains("Standard Values"))
+                return;
             
 
             if (scItem.TemplateID.ToString() == Constants.TemplateIDs.FreeFormSpec_TemplateId // It's a spec
@@ -27,7 +30,7 @@ namespace VAPI.Handlers
 
                 Item trimsFolder = Helpers.GetCurrentTrimsFolderItem(scItem);
 
-                //replace for all trims
+                //replace for all trims 
                 foreach (Item trim in trimsFolder.GetChildren())
                 {                                    
                     string oldMatrixText = trim[Constants.FieldNames.SOPMatrixText_FieldName];

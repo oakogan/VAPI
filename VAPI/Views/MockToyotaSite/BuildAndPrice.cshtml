@@ -19,7 +19,7 @@
     }
 
         .active, .accordion:hover {
-            background-color: #ccc;
+            background-color:#800000;
         }
 
         .accordion:after {
@@ -61,52 +61,75 @@
     }
 </style>
 
+
+
+<div>
+    <img src="http://nine1.local/-/media/Images/Toyota/Trim-Images/Nav.ashx" />
+</div>
+
 <div><h2>@Model.Number</h2></div>
 <div><h1>Full Specs</h1></div>
-            <table>
-                <tr>
-                    @*<td>
-                        Standard Available Not Available
-                    </td>*@
-                    <td style="max-width:200px;"></td>
-                    @foreach (Trim trim in Model.Trims)
+<table>
+    <tr>
+        @*<td>
+                Standard Available Not Available
+            </td>*@
+        <td style="max-width:200px;"></td>
+        @foreach (Trim trim in Model.Trims)
             {
-                        <td>@trim.Katashiki</td>
+            <td>@trim.Katashiki</td>
 
-                    }
-                </tr>
-                @*<tr>
-                    <td style="max-width:200px;"></td>
-                    @foreach (Trim trim in Model.Trims)
-            {
-                        <td>@trim.KatashikiCode</td>
-                    }
-                </tr>*@
-                <tr>
-                    <td style="max-width:200px;"></td>
+        }
+    </tr>
+    @*<tr>
+                <td style="max-width:200px;"></td>
+                @foreach (Trim trim in Model.Trims)
+        {
+                    <td>@trim.KatashikiCode</td>
+                }
+            </tr>*@
+    <tr style="background-color:white;">
+        <td style="max-width:200px;"></td>
 
-                    @foreach (Trim trim in Model.Trims)
+        @foreach (Trim trim in Model.Trims)
             {
-                        <td>@trim.Description</td>
-                    }
-                </tr>
-                <tr>
-                    <td style="max-width:200px;">Standard Available Not Available</td>
+            <td>@trim.Description</td>
+        }
+    </tr>
+    <tr>
+        <td style="max-width:200px;">
+            <img src="http://nine1.local/-/media/Images/Toyota/Trim-Images/SOP.ashx" />
+        </td>
 
-                    @foreach (Trim trim in Model.Trims)
+        @foreach (Trim trim in Model.Trims)
             {
-                        <td><img src="@trim.ImageUrl" /></td>
-                    }
-                </tr>
-            </table>
-      
+            <td><img src="@trim.ImageUrl" /></td>
+        }
+    </tr>
+</table>
+
 
 
 
 
 <button class="accordion">Section 1</button>
 <div class="panel">
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p>
+        <table>
+            <tr>
+                @*<td>
+                        Standard Available Not Available
+                    </td>*@
+                <td style="max-width:200px;">sdfsdfds</td>
+            </tr>
+            <tr>
+                @*<td>
+                Standard Available Not Available
+            </td>*@
+                <td style="max-width:200px;">sdfsdfds</td>
+            </tr>
+        </table>
+    </p>
 </div>
 
 <button class="accordion">Section 2</button>
