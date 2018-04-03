@@ -5,12 +5,63 @@ using Sitecore.Resources.Media;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Web.Services;
 using VAPI.Models;
+using System.Web.Script.Serialization;
+using System.Web.Mvc;
 
 namespace VAPI
 {
     public static class Helpers
     {
+        public static string GetSpecValue(string matrixValue, string specId)
+        {
+            List<string> matches = matrixValue.Split('/').ToList();
+            string match = matches.FirstOrDefault(x => x.Contains(specId));
+
+            if (match != null)
+            {
+                string[] a = match.Split(':');
+                return a[1];
+            }
+
+            return "not found";
+        }
+        public static string GetJson(string seriesId, string yearParam)
+        {
+            if (string.IsNullOrEmpty(seriesId))
+                return null;
+
+            //read query string for Year           
+            //string yearParam = Request.QueryString["year"];
+            if (string.IsNullOrEmpty(yearParam))
+            {
+                yearParam = System.DateTime.Now.Year.ToString();
+            }
+
+            SeriesModel model = Helpers.InitializeSeriesModel(seriesId, yearParam);
+
+            if (model == null)
+                return null;
+
+            var serializer = new JavaScriptSerializer();
+            string VAPI = serializer.Serialize(model.Years.First());
+
+            JsonResult jsonResult = null;
+
+            try
+            {
+                Year yearNew = serializer.Deserialize<Year>(VAPI);
+            }
+            catch
+            {
+                return null;
+            }
+
+
+            return VAPI;
+        }
+
         public static Item GetCurrentYearItem(Item item)
         {
             try

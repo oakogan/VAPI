@@ -27,7 +27,11 @@ namespace VAPI.Controllers
                 yearParam = System.DateTime.Now.Year.ToString();
             }
 
+            
+
             SeriesModel model = Helpers.InitializeSeriesModel(seriesId, yearParam);
+
+
 
             if(model == null)
                 return Json(new

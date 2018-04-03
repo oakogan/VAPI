@@ -48,5 +48,6 @@ namespace VAPI.Models
         public string ImageUrl { get; set; }
         public string MatrixGuid { get; set; }
         public List<Spec> Specs { get; set; }
+
     }
 }

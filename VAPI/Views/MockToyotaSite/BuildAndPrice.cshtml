@@ -19,7 +19,8 @@
     }
 
         .active, .accordion:hover {
-            background-color:#800000;
+            background-color:#d98c8c;
+            color:white;
         }
 
         .accordion:after {
@@ -35,7 +36,7 @@
     }
 
     .panel {
-        padding: 0 18px;
+        /*padding: 0 18px;*/
         background-color: white;
         max-height: 0;
         overflow: hidden;
@@ -67,8 +68,11 @@
     <img src="http://nine1.local/-/media/Images/Toyota/Trim-Images/Nav.ashx" />
 </div>
 
-<div><h2>@Model.Number</h2></div>
-<div><h1>Full Specs</h1></div>
+<div style="margin: auto; width: 300px;">
+    <div><h2>@Model.Number</h2></div>
+    <div><h1>Full Specs</h1></div><br /><br />
+</div>
+
 <table>
     <tr>
         @*<td>
@@ -76,73 +80,68 @@
             </td>*@
         <td style="max-width:200px;"></td>
         @foreach (Trim trim in Model.Trims)
-            {
+        {
             <td>@trim.Katashiki</td>
 
         }
-    </tr>
-    @*<tr>
-                <td style="max-width:200px;"></td>
-                @foreach (Trim trim in Model.Trims)
-        {
-                    <td>@trim.KatashikiCode</td>
-                }
-            </tr>*@
+    </tr>   
     <tr style="background-color:white;">
         <td style="max-width:200px;"></td>
 
         @foreach (Trim trim in Model.Trims)
-            {
+        {
             <td>@trim.Description</td>
         }
     </tr>
     <tr>
-        <td style="max-width:200px;">
+        <td style="width:400px; max-width:400px;">
             <img src="http://nine1.local/-/media/Images/Toyota/Trim-Images/SOP.ashx" />
         </td>
 
         @foreach (Trim trim in Model.Trims)
-            {
-            <td><img src="@trim.ImageUrl" /></td>
+        {
+            <td class="imageUrl"><img src="@trim.ImageUrl" /></td>
         }
     </tr>
 </table>
 
+@{
+    int count = 1;
 
+    foreach (var feature in Model.Features)
+    {
+        foreach (var subsection in feature.Subsections)
+        {
+            <button class="accordion">@subsection.Name</button>
+            <div class="panel">
+                <p>
+                    <table>
+                        @foreach (var spec in subsection.Specs)
+                        {
+                            <tr>
+                                <td style="width:400px; max-width:400px; ">@spec.Name</td>
+                                @foreach (Trim trim in Model.Trims)
+                                {
+                                    <td class="test">@Helpers.GetSpecValue(trim.MatrixGuid, spec.Guid)</td>
 
-
-
-<button class="accordion">Section 1</button>
-<div class="panel">
-    <p>
-        <table>
-            <tr>
-                @*<td>
-                        Standard Available Not Available
-                    </td>*@
-                <td style="max-width:200px;">sdfsdfds</td>
-            </tr>
-            <tr>
-                @*<td>
-                Standard Available Not Available
-            </td>*@
-                <td style="max-width:200px;">sdfsdfds</td>
-            </tr>
-        </table>
-    </p>
-</div>
-
-<button class="accordion">Section 2</button>
-<div class="panel">
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-</div>
-
-<button class="accordion">Section 3</button>
-<div class="panel">
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-</div>
+                                }
+                            </tr>
+                        }                      
+                    </table>
+                </p>
+            </div>
+            count++;
+        }
+    }
+}
 
 <script>
+    $(document).ready(function () {
+        var width = ($(window).width() - 400) / @Model.Trims.Count;
+        document.getElementsByClassName("test")[1].width = width;
+       
+    });
+
     var acc = document.getElementsByClassName("accordion");
     var i;
 

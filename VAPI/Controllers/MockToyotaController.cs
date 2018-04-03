@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using VAPI.Models;
 
 namespace VAPI.Controllers
@@ -35,10 +36,15 @@ namespace VAPI.Controllers
                 yearParam = DateTime.Now.Year.ToString();
             }
 
-            SeriesModel model = Helpers.InitializeSeriesModel(seriesId, yearParam);
+            //SeriesModel model = Helpers.InitializeSeriesModel(seriesId, yearParam);
+
+            string json = Helpers.GetJson(seriesId, yearParam);
+
+            var serializer = new JavaScriptSerializer();
+            Year yearNew = serializer.Deserialize<Year>(json);
 
 
-            return View("~/Views/MockToyotaSite/BuildAndPrice.cshtml", model.Years.First());
+            return View("~/Views/MockToyotaSite/BuildAndPrice.cshtml", yearNew);
         }
 
         private string GetImageUrl(Item item)
