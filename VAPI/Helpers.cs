@@ -3,12 +3,9 @@ using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Resources.Media;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Web.Services;
 using VAPI.Models;
 using System.Web.Script.Serialization;
-using System.Web.Mvc;
 
 namespace VAPI
 {
@@ -16,6 +13,11 @@ namespace VAPI
     {
         public static string GetSpecValue(string matrixValue, string specId)
         {
+            if(specId == "{A6B5F769-B6F2-4AB3-9C47-73EC51AB31DB}")
+            {
+                int x = 0;
+            }
+
             List<string> matches = matrixValue.Split('/').ToList();
             string match = matches.FirstOrDefault(x => x.Contains(specId));
 
@@ -32,8 +34,7 @@ namespace VAPI
             if (string.IsNullOrEmpty(seriesId))
                 return null;
 
-            //read query string for Year           
-            //string yearParam = Request.QueryString["year"];
+            //read query string for Year    
             if (string.IsNullOrEmpty(yearParam))
             {
                 yearParam = System.DateTime.Now.Year.ToString();
@@ -45,9 +46,7 @@ namespace VAPI
                 return null;
 
             var serializer = new JavaScriptSerializer();
-            string VAPI = serializer.Serialize(model.Years.First());
-
-            JsonResult jsonResult = null;
+            string VAPI = serializer.Serialize(model.Years.First());         
 
             try
             {

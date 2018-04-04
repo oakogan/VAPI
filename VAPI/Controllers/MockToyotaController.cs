@@ -23,28 +23,30 @@ namespace VAPI.Controllers
 
         public ActionResult LoadBuildAndPrice()
         {
-            //read query string for Series           
-            if (string.IsNullOrEmpty(Request.QueryString["seriesId"]))
-                return new EmptyResult();
-
-            string seriesId = Request.QueryString["seriesId"];
-
-            //read query string for Year           
-            string yearParam = Request.QueryString["year"];
-            if (string.IsNullOrEmpty(yearParam))
+            try
             {
-                yearParam = DateTime.Now.Year.ToString();
+                //read query string for Series           
+                if (string.IsNullOrEmpty(Request.QueryString["seriesId"]))
+                    return new EmptyResult();
+
+                string seriesId = Request.QueryString["seriesId"];
+
+                //read query string for Year           
+                string yearParam = Request.QueryString["year"];
+                if (string.IsNullOrEmpty(yearParam))
+                {
+                    yearParam = DateTime.Now.Year.ToString();
+                }
+
+                string json = Helpers.GetJson(seriesId, yearParam);
+
+                var serializer = new JavaScriptSerializer();
+                Year yearNew = serializer.Deserialize<Year>(json);
+
+
+                return View("~/Views/MockToyotaSite/BuildAndPrice.cshtml", yearNew);
             }
-
-            //SeriesModel model = Helpers.InitializeSeriesModel(seriesId, yearParam);
-
-            string json = Helpers.GetJson(seriesId, yearParam);
-
-            var serializer = new JavaScriptSerializer();
-            Year yearNew = serializer.Deserialize<Year>(json);
-
-
-            return View("~/Views/MockToyotaSite/BuildAndPrice.cshtml", yearNew);
+            catch { return new EmptyResult(); }
         }
 
         private string GetImageUrl(Item item)

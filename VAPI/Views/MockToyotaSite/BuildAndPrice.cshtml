@@ -19,8 +19,8 @@
     }
 
         .active, .accordion:hover {
-            background-color:#d98c8c;
-            color:white;
+            background-color: #d98c8c;
+            color: white;
         }
 
         .accordion:after {
@@ -84,7 +84,7 @@
             <td>@trim.Katashiki</td>
 
         }
-    </tr>   
+    </tr>
     <tr style="background-color:white;">
         <td style="max-width:200px;"></td>
 
@@ -122,11 +122,36 @@
                                 <td style="width:400px; max-width:400px; ">@spec.Name</td>
                                 @foreach (Trim trim in Model.Trims)
                                 {
-                                    <td class="test">@Helpers.GetSpecValue(trim.MatrixGuid, spec.Guid)</td>
+                                    string specValue = Helpers.GetSpecValue(trim.MatrixGuid, spec.Guid);
 
+                                    if (specValue.ToUpper() == "X")
+                                    {
+                                        <td class="test">
+                                            <img src="http://nine1.local/-/media/Images/Toyota/Trim-Images/NoNew.ashx" />
+                                        </td>
+
+                                    }
+                                    else if (specValue.ToUpper() == "S")
+                                    {
+                                        <td class="test">
+                                            <img src="http://nine1.local/-/media/Images/Toyota/Trim-Images/S.ashx" />
+                                        </td>
+                                    }
+                                    else if (specValue.ToUpper() == "O" || specValue.ToUpper() == "P")
+                                    {
+                                        <td class="test">
+                                            <img src="http://nine1.local/-/media/Images/Toyota/Trim-Images/A.ashx" />
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="test">
+                                            @specValue
+                                        </td>
+                                    }
                                 }
                             </tr>
-                        }                      
+                        }
                     </table>
                 </p>
             </div>
@@ -138,8 +163,8 @@
 <script>
     $(document).ready(function () {
         var width = ($(window).width() - 400) / @Model.Trims.Count;
-        document.getElementsByClassName("test")[1].width = width;
-       
+        document.getElementsByClassName("test").width = width;
+
     });
 
     var acc = document.getElementsByClassName("accordion");

@@ -23,7 +23,6 @@ namespace VAPI.Handlers
 
             if (scItem.TemplateID.ToString() == Constants.TemplateIDs.Trim_TemplateId && string.IsNullOrEmpty(scItem[Constants.FieldNames.SOPMatrixText_FieldName]))// It's a Trim 
             {
-
                 try
                 {
                     Item fsoItem = Helpers.GetCurrentFsoItem(scItem);
@@ -53,7 +52,7 @@ namespace VAPI.Handlers
 
                             foreach (Item spec in tabSection.Children)
                             {
-                                sbText.Append("<div>").Append(spec[Constants.FieldNames.NameMultiline_FieldName]).Append(":").Append("</div>").AppendLine().AppendLine();
+                                sbText.Append("<div>").Append(spec[Constants.FieldNames.NameMultiline_FieldName]).Append(":").Append(spec[Constants.FieldNames.Spec_FieldName]).Append("</div>").AppendLine().AppendLine();
                                 sbGuid.Append(spec.ID).Append(":").Append(spec[Constants.FieldNames.Spec_FieldName]).Append("/");
                             }
                         }
@@ -75,9 +74,6 @@ namespace VAPI.Handlers
                 catch (Exception ex) { }
             }
             //If a new spec is created it gets written to Matrix fields upon save in the FSO vew
-
-
-
         }
     }
 }
