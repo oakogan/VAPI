@@ -31,9 +31,7 @@ namespace VAPI.Controllers
         [HttpPost]
         public void FsoSave(CommonModel model)
         {
-            model = InitializeTrims(model);
-
-           
+            model = InitializeTrims(model);           
             
             Item fsoItem = Sitecore.Context.Database.GetItem(model.ContextItemId);
             Item yearItem = Helpers.GetCurrentYearItem(fsoItem);
@@ -41,6 +39,7 @@ namespace VAPI.Controllers
             model.SeriesItemName = seriesItem.Name + " " + yearItem.Name; 
 
             string updatedSpecs = model.UpdatedSpecs;
+
             List<string> records = updatedSpecs.Split('*').ToList();
             string newFsoString = string.Empty;
 
@@ -133,6 +132,9 @@ namespace VAPI.Controllers
             //return RedirectToAction("LoadFSO");
             Response.Redirect(model.PreviewUrl);
         }
+
+      
+
 
         #endregion
 
