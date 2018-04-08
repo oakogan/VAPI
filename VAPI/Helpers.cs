@@ -13,18 +13,22 @@ namespace VAPI
     {
         public static string GetSpecValue(string matrixValue, string specId)
         {
-            if(specId == "{A6B5F769-B6F2-4AB3-9C47-73EC51AB31DB}")
-            {
-                int x = 0;
-            }
-
             List<string> matches = matrixValue.Split('/').ToList();
             string match = matches.FirstOrDefault(x => x.Contains(specId));
 
             if (match != null)
             {
                 string[] a = match.Split(':');
-                return a[1];
+                Item specItem = Context.Database.GetItem(specId);
+
+                if(specItem.TemplateID.ToString() == Constants.TemplateIDs.PredefinedSpec_TemplateId && string.IsNullOrEmpty(a[1]))
+                {
+                    return specItem.GetChildren().First()["Name"];
+                }
+                else
+                {                     
+                    return a[1];
+                }
             }
 
             return "not found";

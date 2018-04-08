@@ -144,10 +144,38 @@
                                                     //string par = "UpdateDopwDownSpecs(" + spec.ID.ToString() + ":" + this.value);";
                                                     string specIdString = "trim" + trim.ID.ToString() + "/" + spec.ID.ToString();
                                                     <select id="@specIdString" onchange="UpdateDopwDownSpecs(this.id + ':' + this.value);">
-                                                        @foreach (Item option in spec.GetChildren())
-                                                        {
-                                                            string selected = (a[1] == option["Name"]) ? "selected" : "";
-                                                            <option @selected>@option["Name"]</option>
+                                                        @{
+                                                            string selected = string.Empty;
+
+                                                            foreach (Item option in spec.GetChildren())
+                                                            {
+                                                                selected = (a[1] == option["Name"]) ? "selected" : string.Empty;
+                                                                @*<option @selected>@option["Name"]</option>*@
+                                                            }
+
+                                                            if (!string.IsNullOrEmpty(selected))
+                                                            {
+                                                                foreach (Item option in spec.GetChildren())
+                                                                {
+                                                                    selected = (a[1] == option["Name"]) ? "selected" : string.Empty;
+                                                                    <option @selected>@option["Name"]</option>
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                int count = 0;
+
+                                                                foreach (Item option in spec.GetChildren())
+                                                                {
+                                                                    if (count == 0)
+                                                                    {
+                                                                        selected = "selected";
+                                                                    }
+
+                                                                    <option @selected>***@option["Name"]</option>
+                                                                    count++;
+                                                                }
+                                                            }
                                                         }
                                                     </select>
                                                 }
