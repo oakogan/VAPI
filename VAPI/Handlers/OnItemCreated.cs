@@ -14,14 +14,14 @@ namespace VAPI.Handlers
         public void VAPIOnItemCreated(object sender, EventArgs args)
         {
             // Extract the item from the event Arguments
-            Item scItem = Event.ExtractParameter(args, 0) as Item;            
+            Item scItem = Event.ExtractParameter(args, 0) as Item;
 
             if (scItem == null)
                 return;
 
             if (scItem.Paths.FullPath.Contains("Standard Values"))
                 return;
-
+                      
             if ((scItem.TemplateID.ToString() == Constants.TemplateIDs.Trim_TemplateId && string.IsNullOrEmpty(scItem[Constants.FieldNames.SOPMatrixGuid_FieldName]))
                 || scItem.TemplateID.ToString() == Constants.TemplateIDs.SOPSpec_TemplateId
                 || scItem.TemplateID.ToString() == Constants.TemplateIDs.PredefinedSpec_TemplateId
@@ -64,7 +64,7 @@ namespace VAPI.Handlers
 
                     using (new SecurityDisabler())
                     {
-                        if(scItem.TemplateID.ToString() == Constants.TemplateIDs.Trim_TemplateId)
+                        if (scItem.TemplateID.ToString() == Constants.TemplateIDs.Trim_TemplateId)
                         {
                             scItem.Editing.BeginEdit(); //update Trim item
                             scItem[Constants.FieldNames.SOPMatrixText_FieldName] = sbText.ToString();
@@ -79,25 +79,20 @@ namespace VAPI.Handlers
                         else
                         {
                             Item trimsFolderItem = Helpers.GetCurrentTrimsFolderItem(scItem);
-                            //Item previousItem = scItem.Axes.GetPreviousSibling();
 
-                            foreach(Item trim in trimsFolderItem.GetChildren())//add new spec to the trims' Matrix fields
+                            foreach (Item trim in trimsFolderItem.GetChildren())//add new spec to the trims' Matrix fields
                             {
-                                string currentGuildValue = trim[Constants.FieldNames.SOPMatrixGuid_FieldName];
-                                //string[] pairs = currentGuildValue.Split('/');
-
+                                string currentGuildValue = trim[Constants.FieldNames.SOPMatrixGuid_FieldName];   
                                 string newPair = string.Empty;
 
-                               
-                                    if (scItem.TemplateID.ToString() == Constants.TemplateIDs.PredefinedSpec_TemplateId)
-                                    {
-                                        newPair += scItem.ID.ToString() + ":" + scItem.GetChildren().First()["Name"];
-                                    }
-                                    else
-                                    {
-                                        newPair += scItem.ID.ToString() + ":" + scItem["Spec"];
-                                    }
-
+                                if (scItem.TemplateID.ToString() == Constants.TemplateIDs.PredefinedSpec_TemplateId)
+                                {
+                                    newPair += scItem.ID.ToString() + ":" + scItem.GetChildren().First()["Name"];
+                                }
+                                else
+                                {
+                                    newPair += scItem.ID.ToString() + ":" + scItem["Spec"];
+                                }
 
                                 string newValue = currentGuildValue += newPair;
 
@@ -106,10 +101,18 @@ namespace VAPI.Handlers
                                 trim.Editing.EndEdit();
                             }
                         }
-                    }
-                }
+                    }// end of using
+                }// end of try
                 catch (Exception ex) { }
-            }
+            }// end of if
+           
+
+
+
+
+
+
+
             //If a new spec ToDo: add other specs
             //else if(scItem.TemplateID.ToString() == Constants.TemplateIDs.SOPSpec_TemplateId)
             //{

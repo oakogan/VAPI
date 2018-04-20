@@ -243,10 +243,10 @@
     <Content Include="App_Config\Include\Unicorn\Unicorn.config" />
     <Content Include="App_Config\Include\Unicorn\Unicorn.AutoPublish.config" />
     <None Include="Properties\PublishProfiles\Local.pubxml" />
-    <Content Include="Views\FSO.cshtml" />
+    <Content Include="Views\FSOtoDelete.cshtml" />
     <Content Include="Views\Layouts\VAPILayout.cshtml" />
-    <Content Include="Views\FSO\Index.cshtml" />
-    <Content Include="Views\FSO\CommonFSO.cshtml" />
+    <Content Include="Views\FSO\IndexToDelete.cshtml" />
+    <Content Include="Views\FSO\CommonFSOToDelete.cshtml" />
     <Content Include="Views\FSO\FSONew.cshtml" />
     <Content Include="Views\MockToyotaSite\BuildAndPrice.cshtml" />
     <Content Include="Views\Layouts\MockToyotaLayout.cshtml" />
@@ -262,6 +262,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Handlers\OnItemCopied.cs" />
     <Compile Include="Handlers\OnItemCreated.cs" />
     <Compile Include="Handlers\OnItemDeleted.cs" />
     <Compile Include="Handlers\OnItemSaving.cs" />
