@@ -9,9 +9,9 @@ using VAPI.Models;
 
 namespace VAPI.Handlers
 {
-    public class OnItemCreated
+    public class OnItemSaved
     {
-        public void VAPIOnItemCreated(object sender, EventArgs args)
+        public void VAPIOnItemSaved(object sender, EventArgs args)
         {
             // Extract the item from the event Arguments
             Item scItem = Event.ExtractParameter(args, 0) as Item;
